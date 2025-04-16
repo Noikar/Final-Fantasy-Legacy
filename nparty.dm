@@ -119,18 +119,47 @@ mob/PC
 				p.pmoves = null
 			if(inmenu == "party_gt") inmenu=null
 
-mob/PC/Move()
-	if(party&&src==party[1]&&!inbattle)
+mob/PC/var/tmp
+	isMoving = 0	//This is used to check if the player is moving. If so, further movement is not allowed until current movement stops and the var is reset.
+
+mob/PC/Move()		// Overrides the base mob/Move specifically for PCs
+	// --- Cooldown Check ---
+	if (src.isMoving)
+		return 0	// Block move if already moving
+
+	// --- Set Cooldown ---
+	src.isMoving = 1
+	spawn(world.tick_lag) 		// Adjust multiplier based on animation speed
+		if(src) src.isMoving = 0	// Reset after delay
+
+	// --- Party Pre-Move Logic ---
+	if(party && src == party[1] && !inbattle)
 		for(var/mob/PC/p in party)
-			if(p.inparty!=1)
-				var/mob/PC/m=party[p.inparty-1]
-				if(get_dist(m,p)==1){p.pmoves=m.dir}
-				else if(get_dist(m,p)>=2){p.pmoves="OUTOFSIGHT"}
+			if(p.inparty != 1)
+				var/mob/PC/m = party[p.inparty - 1]
+				if(get_dist(m, p) == 1) p.pmoves = m.dir
+				else if(get_dist(m, p) >= 2) p.pmoves = "OUTOFSIGHT"
 				else p.pmoves = null
-	..()
-	if(party&&src==party[1]&&!inbattle)
-		for(var/mob/PC/p in party)
-			if(p.inparty!=1)
-				var/mob/PC/m=party[p.inparty-1]
-				if(p.pmoves=="OUTOFSIGHT") p.loc = locate(m.x,m.y,m.z)
-				else if(p.pmoves) step(p,p.pmoves)
+
+	// --- Execute Original Move ---
+	var/move_result = ..() // Calls the original mob/Move logic
+
+	// --- Party Post-Move Logic ---
+	if(party && src == party[1] && !inbattle)
+		if (move_result == 1) // Only move followers if leader's move started
+			for(var/mob/PC/p in party)
+				if(p.inparty != 1)
+					var/mob/PC/m = party[p.inparty - 1]
+					if(p.pmoves == "OUTOFSIGHT")
+						// Use step_to for smoother teleport/catch-up
+						step_to(p, m, 0)
+						p.dir = m.dir // Match direction
+					else if(p.pmoves)
+						step(p, p.pmoves)
+					p.pmoves = null // Clear stored move
+		else // Leader move failed, clear follower intentions
+			for(var/mob/PC/p in party)
+				if(p.inparty != 1) p.pmoves = null
+
+
+	return move_result

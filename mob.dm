@@ -60,10 +60,6 @@ mob/Bonus/verb
 			var/CustIcon = "custom/[S.class]/[S.key].dmi"
 			if(fexists(CustIcon)){S.custom_icon = file(CustIcon);S.icon = S.custom_icon}
 
-mob/PC
-	var
-		tmp
-			cur_running
 atom
 	var
 		passable = 0	//All things now have this variable, if you want things to be inpassable, set it to 0, otherwise set it to 1.
@@ -72,6 +68,13 @@ mob
 		Login()
 			..()
 			passable = 1
+
+mob/PC
+	step_x = 20
+	step_y = 20
+	var/tmp
+		runningInto	//This is used to check if the player is running into someone, if so, it will set the density to 0 and move the player to the object.
+
 mob/PC
 	Bump(atom/M)
 		if(istype(M,/obj/NPC) || istype(M,/mob/PC))
@@ -81,15 +84,15 @@ mob/PC
 				var/mob/MN = M
 				if(MN.client && isGM(M) || isAdmin(M) || isHeadAdmin(M) || isHeadGM(M))
 					return
-			if(src.cur_running == M)
+			if(src.runningInto == M)
 				src.density = 0
 				src.Move(M.loc,src.dir)
-				src.cur_running = null
+				src.runningInto = null
 				src.density = 1
 			else
-				src.cur_running = M
+				src.runningInto = M
 		else
-			src.cur_running = null
+			src.runningInto = null
 			return 0
 
 mob/PC/proc

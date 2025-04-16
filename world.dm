@@ -1,6 +1,8 @@
 //# world setting
 world
+
 //	status="Official FFL server"
+	hub = "Lunaofthemoon.FinalFantasyLegacy"
 	name = "FINAL FANTASY Legacy"
 	tick_lag=DEFAULT_PRIORITY
 	mob=/mob/character
