@@ -1,6 +1,5 @@
 //# world setting
 world
-
 //	status="Official FFL server"
 	hub = "Lunaofthemoon.FinalFantasyLegacy"
 	name = "FINAL FANTASY Legacy"
