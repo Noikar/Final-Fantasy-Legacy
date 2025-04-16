@@ -1,0 +1,31 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "DM",
+            "type": "shell",
+            "command": "C:/Program Files (x86)/BYOND/bin/dm.exe",
+            "args": ["E:/Final-Fantasy-Legacy/ffl.dme"],
+            "problemMatcher": {
+                "owner": "dm",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^([^:]+):(\\d+):([^:]+): (.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }        }
+    ]
+}

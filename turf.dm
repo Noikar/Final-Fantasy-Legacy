@@ -116,7 +116,7 @@ turf/newtitle
 // misc images
 turf/miscimg/intro
 	name=null
-	icon='logo.png'
+	//icon='logo.png'
 turf/miscimg/prologue
 	name=null
 	icon='prologue.png'

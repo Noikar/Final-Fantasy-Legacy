@@ -11,7 +11,6 @@
 #include "clans.dm"
 #include "client.dm"
 #include "debug.dm"
-#include "hub.dm"
 #include "menu.dm"
 #include "misc.dm"
 #include "mob.dm"
@@ -28,7 +27,7 @@
 #include "status_effects.dm"
 #include "turf.dm"
 #include "world.dm"
-#include "worldmap.dmp"
+#include "worldmap.dmm"
 #include "feats\ferry\ferry.dm"
 #include "feats\race\races.dm"
 // END_INCLUDE
