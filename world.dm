@@ -1,7 +1,7 @@
 //# world setting
 world
-
 //	status="Official FFL server"
+	name = "FINAL FANTASY Legacy"
 	tick_lag=DEFAULT_PRIORITY
 	mob=/mob/character
 	view=8
@@ -35,7 +35,7 @@ world
 		..()
 
 //# world var/proc
-var/list/GAME_OWNER = list("Loud"="Head Admin","Lunaofthemoon"="Head Admin")
+var/list/GAME_OWNER = list("Lunaofthemoon"="Head Admin")
 var/list/GAME_HOST = list("Lunaofthemoon")
 var/LOGFILE="ffl.log"							// Log file
 //tick lag stuff
