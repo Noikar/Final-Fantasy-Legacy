@@ -1,6 +1,11 @@
 client
 	default_verb_category="Social"
 	fps = 60
+	var/const/MENU_MOVE_DELAY = 1
+	var/tmp
+		last_menu_move_time = 0
+		last_menu_move_dir = 0
+
 	Northeast()
 		if(!istype(usr,/mob/PC)) return
 		var/mob/PC/M=usr
@@ -18,7 +23,7 @@ client
 					M.close_screen("character_menu_slot4")
 					M.close_screen("character_menu_type")
 					if(M.menuaction=="Load")
-						spawn(10) if(M&&M.inmenu=="intro_screen") M.screen_textl(5,13,1,1,16,24,2,0,"© 1991 SQUäRE","intro_screen")
+						spawn(10) if(M&&M.inmenu=="intro_screen") M.screen_textl(5,13,1,1,16,24,2,0,"ï¿½ 1991 SQUï¿½RE","intro_screen")
 						M.inmenu="intro_screen"
 					else M.inmenu=null
 					M.menuaction=null
@@ -208,6 +213,8 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu&&M.inparty&&M.inparty!=1) return //??????????????
 		if(M.inmenu)
+			if(world.time < M.client.last_menu_move_time + MENU_MOVE_DELAY) return
+			M.client.last_menu_move_time = world.time
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_menu")
@@ -614,6 +621,8 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu&&M.inparty&&M.inparty!=1) return
 		if(M.inmenu)
+			if(world.time < M.client.last_menu_move_time + MENU_MOVE_DELAY) return
+			M.client.last_menu_move_time = world.time
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_menu")
@@ -961,6 +970,8 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu&&M.inparty&&M.inparty!=1) return
 		if(M.inmenu)
+			if(world.time < M.client.last_menu_move_time + MENU_MOVE_DELAY) return
+			M.client.last_menu_move_time = world.time
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_newgame_toggle")
@@ -1218,6 +1229,8 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu&&M.inparty&&M.inparty!=1) return
 		if(M.inmenu)
+			if(world.time < M.client.last_menu_move_time + MENU_MOVE_DELAY) return
+			M.client.last_menu_move_time = world.time
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_newgame_toggle")
