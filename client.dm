@@ -9,11 +9,16 @@ client
 	Northeast()
 		if(!istype(usr,/mob/PC)) return
 		var/mob/PC/M=usr
-		if(!M.inbattle&&!M.inmenu) M.screen("menu")
+		if(!M.inbattle&&!M.inmenu)
+			M.screen("menu")
+			M << sound(SOUND_CURSOR)
+
 	Northwest()
 		if(!istype(usr,/mob/PC)&&!istype(usr,/mob/character)) return
 		var/mob/PC/M=usr
 		if(M.inmenu)
+			// Added sound for backing out - consider if needed or use a different sound
+			M << sound(SOUND_BACK)
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_menu")
@@ -611,9 +616,15 @@ client
 				if("chocobo_race")
 					M.current_speed += M.acceleration/12
 					if(M.current_speed>M.top_speed) M.current_speed = M.top_speed
-				else return
-			return
-		..()
+					return // Don't play cursor sound for chocobo speed change
+				else // Default case for the switch(M.inmenu)
+					return // Don't play sound if menu type not handled or no cursor move happened
+
+			// Play sound if we successfully handled a menu cursor move above and didn't return early
+			M << sound(SOUND_CURSOR)
+			return // Prevent default mob movement after handling menu input
+		..() // Default mob movement if not in menu
+
 	South()
 		if(!istype(usr,/mob/PC)&&!istype(usr,/mob/character))
 			usr.density=0
@@ -960,9 +971,15 @@ client
 				if("chocobo_race")
 					M.current_speed -= M.top_speed/12
 					if(M.current_speed<0) M.current_speed = 0
-				else return
-			return
-		..()
+					return // Don't play cursor sound for chocobo speed change
+				else // Default case for the switch(M.inmenu)
+					return // Don't play sound if menu type not handled or no cursor move happened
+
+			// Play sound if we successfully handled a menu cursor move above and didn't return early
+			M << sound(SOUND_CURSOR)
+			return // Prevent default mob movement after handling menu input
+		..() // Default mob movement if not in menu
+
 	East()
 		if(!istype(usr,/mob/PC)&&!istype(usr,/mob/character))
 			usr.density=0
@@ -1218,10 +1235,16 @@ client
 						if(2) M.curser.screen_loc = "12,14:8"
 			// MINI-GAME CODE
 				// CHOCOBO RACES
-				if("chocobo_race") M.direction+=M.turning
-				else return
-			return
-		..()
+				if("chocobo_race")
+					M.direction+=M.turning
+					return // Don't play cursor sound for chocobo direction change
+				else // Default case for the switch(M.inmenu)
+					return // Don't play sound if menu type not handled or no cursor move happened
+			// Play sound if we successfully handled a menu cursor move above and didn't return early
+			M << sound(SOUND_CURSOR)
+			return // Prevent default mob movement after handling menu input
+		..() // Default mob movement if not in menu
+
 	West()
 		if(!istype(usr,/mob/PC)&&!istype(usr,/mob/character))
 			usr.density=0
@@ -1477,15 +1500,24 @@ client
 						if(2) M.curser.screen_loc = "12,14:8"
 			// MINI-GAME CODE
 				// CHOCOBO RACES
-				if("chocobo_race") M.direction-=M.turning
-				else return
-			return
-		..()
-	Center()
+				if("chocobo_race")
+					M.direction-=M.turning
+					return // Don't play cursor sound for chocobo direction change
+				else // Default case for the switch(M.inmenu)
+					return // Don't play sound if menu type not handled or no cursor move happened
+			// Play sound if we successfully handled a menu cursor move above and didn't return early
+			M << sound(SOUND_CURSOR)
+			return // Prevent default mob movement after handling menu input
+		..() // Default mob movement if not in menu
+	Center() // This handles selection/confirmation
 		if(!istype(usr,/mob/PC)&&!istype(usr,/mob/character)) return
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu){M.default();return ..()}
 		if(M.inmenu)
+			// Play confirmation sound when Center is pressed in a menu
+			// Define SOUND_CONFIRM in audio.dm, e.g., var/const/SOUND_CONFIRM = 'audio/sound/confirm.ogg'
+			M << sound(SOUND_CURSOR) // <<<< ADDED SOUND PLAYBACK HERE
+
 			switch(M.inmenu)
 			//INTRO SCREEN
 				if("intro_screen")
@@ -1760,6 +1792,6 @@ client
 						if(0) return
 						if(1 to 5) M.chocobo_buy(M.menupos)
 						if(6){M.curser.screen_loc="4:16,12:8";M.menupos=1;M.close_screen("chocobo_race_menu_feed");M.inmenu="chocobo_race_menu"}
-				else return
-			return
-		..()
+				else return // Return if the menu type wasn't handled by the switch
+			return // Prevent default mob Center() after handling menu input
+		..() // Default mob Center() if not in menu

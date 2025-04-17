@@ -405,7 +405,7 @@ mob/PC/proc/StartBattle(var/turf/Location)
 	if(!length(Monsters)){for(var/mob/PC/p in party) p.inmenu=null;return} //no monsters? stopping.
 	//sending nifty sounds
 	party<<SOUND_BTLSTART
-	party<<sound(MUSIC_BATTLE,1,0,1)
+	party<<sound(MUSIC_BATTLE,1,0,1,volume=50)
 	//everything done, lets rumble!
 	Battle(BLoc,0,party,Monsters)
 
@@ -720,7 +720,7 @@ proc/EndBattle(list/Losers)
 
 proc/Victory(list/Winners,exp_reward,gp_reward)
 	Winners<<sound(null)
-	Winners<<sound(MUSIC_VICTORY,1,0,1)
+	Winners<<sound(MUSIC_VICTORY,1,0,1,volume=50)
 	for(var/mob/PC/p in Winners)
 		if(p&&p.client)
 			p.inmenu="panel"

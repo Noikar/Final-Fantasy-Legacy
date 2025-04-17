@@ -31,7 +31,8 @@ var/const/MUSIC_PALADIN =   'audio/music/Paladin.ogg'
 var/const/MUSIC_GIOTT =     'audio/music/Giott.ogg'
 
 //SOUND EFFECT!
-//var/const/SOUND_CURSOR = 'audio/sound/cursor.wav' // Coming soon to a menu near you!
+var/const/SOUND_CURSOR = 'audio/sound/cursor.ogg'
+var/const/SOUND_BACK = 'audio/sound/back.ogg'
 var/const/SOUND_CASH = 'audio/sound/cash.wav'
 var/const/SOUND_WRONG = 'audio/sound/wrong.wav'
 var/const/SOUND_POTION = 'audio/sound/potion.wav'

@@ -414,7 +414,7 @@ mob/Admin/proc
 		if(!isHeadAdmin(src) && !isAdmin(src)){info(,list(src),"Jerk Off");return}
 		var/obj/NPC/vehicule/bigwhale/BW = locate(/obj/NPC/vehicule/bigwhale) in range(src)
 		if(!BW){info(,list(src),"No big whale nearby to summon.");return}
-		for(var/mob/PC/p in range(BW)) p.playsound(MUSIC_BIGWHALE,1,0,1)
+		for(var/mob/PC/p in range(BW)) p.playsound(MUSIC_BIGWHALE,1,0,1,volume=50)
 		for(var/obj/misc/swirl/swirl/s in range(BW)) s.invisibility=0
 		spawn(50)
 			for(var/obj/misc/swirl/splash/a in range(BW)) a.invisibility=0
