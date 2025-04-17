@@ -5,18 +5,18 @@ mob/PC/proc/GotoLoc(location)
 	if(inparty==1) density=1
 	switch(location)
 		if(/area/start_location){last_area=/area/saved_location/baron_area;sound = MUSIC_TOWN}
-		if(/area/saved_location/baron_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/mist_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/kaipo_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/damcyan_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/fabul_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/mysdia_area) sound = MUSIC_WORLDMAP
+		if(/area/saved_location/baron_area) sound = MUSIC_WORLD
+		if(/area/saved_location/mist_area) sound = MUSIC_WORLD
+		if(/area/saved_location/kaipo_area) sound = MUSIC_WORLD
+		if(/area/saved_location/damcyan_area) sound = MUSIC_WORLD
+		if(/area/saved_location/fabul_area) sound = MUSIC_WORLD
+		if(/area/saved_location/mysdia_area) sound = MUSIC_WORLD
 		if(/area/saved_location/mount_hobbs_area) sound = MUSIC_MOUNTAIN
 		if(/area/saved_location/mount_ordeals_area) sound = MUSIC_MOUNTAIN
 		if(/area/saved_location/antlion_area) sound = MUSIC_CAVE
 		if(/area/saved_location/water_cave_area) sound = MUSIC_CAVE
-		if(/area/saved_location/toroia_area) sound = MUSIC_WORLDMAP
-		if(/area/saved_location/legacy_area) sound = MUSIC_WORLDMAP
+		if(/area/saved_location/toroia_area) sound = MUSIC_WORLD
+		if(/area/saved_location/legacy_area) sound = MUSIC_WORLD
 	usr<<sound(sound,1,0,1)
 
 // area vars
