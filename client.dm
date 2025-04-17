@@ -23,7 +23,6 @@ client
 					M.close_screen("character_menu_slot4")
 					M.close_screen("character_menu_type")
 					if(M.menuaction=="Load")
-						spawn(10) if(M&&M.inmenu=="intro_screen") M.screen_textl(5,13,1,1,16,24,2,0,"� 1991 SQU�RE","intro_screen")
 						M.inmenu="intro_screen"
 					else M.inmenu=null
 					M.menuaction=null

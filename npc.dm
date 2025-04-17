@@ -47,11 +47,11 @@ obj/NPC
 			else{last_move = pick(step_to_list);step(src,last_move)}
 		spawn(speed) Wander()
 	proc/Dance()
-		var/tmp/dance = rand(1,2)
-		if(dance==1){var/tmp/angle = rand(1,2);if(angle==1) angle = 90;else angle = -90;dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle)}
+		var/dance = rand(1,2)
+		if(dance==1){var/angle = rand(1,2);if(angle==1) angle = 90;else angle = -90;dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle);sleep(2);dir = turn(src.dir, angle)}
 		if(dance==2)
-			var/tmp/jump
-			var/tmp/angle = rand(1,2)
+			var/jump
+			var/angle = rand(1,2)
 			if(angle==1) angle = 90
 			else angle = -90
 			for(jump=1, jump<=16, jump++)

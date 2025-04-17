@@ -1,9 +1,7 @@
 //# world setting
 world
-//	status="Official FFL server"
-	hub = "Lunaofthemoon.FinalFantasyLegacy"
 	name = "FINAL FANTASY Legacy"
-	tick_lag=DEFAULT_PRIORITY
+	tick_lag = DEFAULT_PRIORITY
 	mob=/mob/character
 	view=8
 	New()
@@ -108,7 +106,6 @@ mob
 				//crystal music..
 				usr<<sound(MUSIC_CRYSTAL,1,0,1)
 				//setting 'inmenu' so the users can press CENTER to make the loading screen popup
-				spawn(10) if(inmenu=="intro_screen") screen_textl(5,13,1,1,16,24,2,0,"� 1991 SQU�RE","intro_screen")
 				inmenu="intro_screen"
 			..()
 
