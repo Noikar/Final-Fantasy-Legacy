@@ -855,7 +855,7 @@ mob/Head_GM/proc
 		set desc="Look at your teams past actions."
 		if(!isAdmin(src)&&!isHeadAdmin(src)&&!isGM(src)&&!isHeadGM(src)){info(,list(src),"Jerk off.");return}
 		if(fexists("gmlog.txt"))
-			usr<<browse("<small>[replace_text(file2text("gmlog.txt"),"\n","<br>")]</small>")
+			src<<browse("<small>[replace_text(file2text("gmlog.txt"),"\n","<br />")]</small>")
 
 mob/GM/proc
 	Push()

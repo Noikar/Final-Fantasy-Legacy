@@ -9,6 +9,7 @@
 #include "audio.dm"
 #include "bank.dm"
 #include "clans.dm"
+#include "classes.dm"
 #include "client.dm"
 #include "debug.dm"
 #include "menu.dm"

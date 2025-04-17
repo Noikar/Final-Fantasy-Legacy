@@ -50,30 +50,31 @@ var/savefile/CR_Key = new("saves/cr_key.sav")
 var/savefile/CR_IP = new("saves/cr_ip.sav")
 var/list/Submit = new("saves/submit.sav")
 var/list/Defeated_Bosses[] = new()
-var/list/ClientIP[] = new()				// Multiples connections
-var/list/WCensor[] = new()				// Word censor list
-var/list/GMList[] = GAME_OWNER		// GMs list
+var/list/ClientIP[] = new()					// Multiples connections
+var/list/WCensor[] = new()					// Word censor list
+var/list/GMList[] = GAME_OWNER				// GMs list
 var/list/MuteList = new()					// mute list
 var/list/WSayBanList = new()
-var/list/IPMuteList = new()				// IP Mute list
+var/list/IPMuteList = new()					// IP Mute list
 var/list/BanList = new()					// Ban list
-var/list/IPBanList = new()				// IP Ban list
+var/list/IPBanList = new()					// IP Ban list
 var/list/color_list = list("Black"="#000000","White"="#FFFFFF","Blue"="#0000FF","Dark Blue"="#00008B","Red"="#FF0000","Dark Red"="#8B0000","Green"="#008000","Dark Green"="#006400","Orange"="#FFA500","Dark Orange"="#FF8C00","Teal"="#008080","Tan"="#D2B48C","Turquoise"="#40E0D0","Cyan"="#00FFFF","Dark Cyan"="#008B8B","Steelblue"="#4682B4","Skyblue"="#87CEEB","Magenta"="#FF00FF","Dark Magenta"="#8B008B","Light Grey"="#D3D3D3","Gray"="#808080","Yellow"="#FFFF00")
-var/const/max_ip_allowed=2				// maximum number of connection from the same IP address.
-var/const/max_text_len=400 				// max message len, in letter.
+var/const/max_ip_allowed=2					// maximum number of connection from the same IP address.
+var/const/max_text_len=400 					// max message len, in letter.
 var/const/max_away_len=50					// max away message len
 // allow how many line (flood_lines) for a period of time (flood_interval)
 var/const/flood_lines=12					// gives 12 lines max
-var/const/flood_interval=450			// for 45 secs.
+var/const/flood_interval=450				// for 45 secs.
 var/const/repeat_num=4 						// allow how many repeats
 var/const/max_swearing=5					// how swear allowed by line (triggering it will give a warning)
 var/const/mute_time=2000 					// mute time
 var/const/ban_time=4000 					// ban time after user reached max_warning
 var/const/max_warning=2 					// max warning before auto-ban
-var/const/announce_wait_time=200 	// wait time for the announcement
-var/global/chat=1									// global var to turn on/off chat
-var/const/game_version = "5.03"
+var/const/announce_wait_time=200 			// wait time for the announcement
+var/const/game_version = "5.6"				// game version
+var/global/chat=1							// global var to turn on/off chat
 
+client/preload_rsc = 2						// preload resources
 
 mob
 	verb/FAQ()
