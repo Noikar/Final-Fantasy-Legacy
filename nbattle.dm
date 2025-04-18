@@ -659,7 +659,7 @@ proc/Battle(turf/battle/location/BLoc,BType,list/Attackers,list/Defenders)
 					if(wait_time>=battle_wait_time||BLoc.nAttackers<=0||BLoc.nDefenders<=0)
 						//closing all windows
 						p.inmenu="panel"
-						for(var/obj/onscreen/curser/C in p.client.screen) del(C)
+						for(var/obj/onscreen/cursor/C in p.client.screen) del(C)
 						p.close_screen("battle_item");p.close_screen("battle_dart");p.close_screen("battle_askills");p.close_screen("battle_askills_cost");p.close_screen("battle_left_menu");p.close_screen("battle_right_menu");p.close_screen("battle_menu");p.close_screen("left_battle_attack_message");p.close_screen("right_battle_attack_message")
 						if(p.Haste)
 							p.haste_counter++
@@ -724,7 +724,7 @@ proc/Victory(list/Winners,exp_reward,gp_reward)
 	for(var/mob/PC/p in Winners)
 		if(p&&p.client)
 			p.inmenu="panel"
-			for(var/obj/onscreen/curser/C in p.client.screen) del(C)
+			for(var/obj/onscreen/cursor/C in p.client.screen) del(C)
 			p.close_screen("battle_item");p.close_screen("battle_dart");p.close_screen("battle_askills");p.close_screen("battle_askills_cost")
 			p.close_screen("battle_left_menu");p.close_screen("battle_right_menu");p.close_screen("battle_menu")
 			p.close_screen("left_battle_attack_message");p.close_screen("right_battle_attack_message")
@@ -2214,7 +2214,7 @@ mob/proc/AiAttack()
 
 
 //Damage procedures, every damage are done here
-mob/proc/Damage(obj/Ability/Action,list/TargList)
+mob/proc/Damage(obj/Ability/Action, list/TargList)
 	if(!length(TargList)) return
 	var/turf/battle/location/BLoc = locate(/turf/battle/location/) in view(src)
 	var/mob/PC/Z=usr
@@ -2235,6 +2235,8 @@ mob/proc/Damage(obj/Ability/Action,list/TargList)
 		if(Action.Curseable&&src.Curse) {disp_dmg(Target,"miss");continue}
 		if(istype(Target,/mob/PC))
 			var/mob/PC/T = Target
+			if(T.row_position == 2 && Action && Action.DmgType == 1) // 1 = physical
+				Damage = round(Damage / 2)
 			if(Damage<0)
 				if(T.HP<=0&&Action.Revive)
 					if(BLoc.Attackers.Find(T)) BLoc.nAttackers++
@@ -2386,18 +2388,18 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 		if(action[4]) screen_textl(4.5,12,3,3,0,4,7,,"[action[4]]","battle_menu")
 		if(action[5]) screen_textl(4.5,12,2,2,0,8,7,,"[action[5]]","battle_menu")
 		menupos=1
-		curser=new(client)
-		curser.screen_loc="3:16,6:-8"
+		cursor=new(client)
+		cursor.screen_loc="3:16,6:-8"
 	else if(screen=="battle_left_menu")
 		inmenu="battle_left_menu"
 		screen_sbackground(3,5,6,6,8,"battle_left_menu")
 		screen_textl(4,7,5.5,5.5,0,0,9,,"Run","battle_left_menu")
-		curser.screen_loc="3,5:16"
+		cursor.screen_loc="3,5:16"
 	else if(screen=="battle_right_menu")
 		inmenu="battle_right_menu"
 		screen_sbackground(8,5,11,6,8,"battle_right_menu")
 		screen_textl(9,12,5.5,5.5,0,0,9,,"Parry","battle_right_menu")
-		curser.screen_loc="8,5:16"
+		cursor.screen_loc="8,5:16"
 	else if(screen=="left_battle_attack_message"&&slot)
 		close_screen("left_battle_attack_message")
 		screen_sbackground(2,15,7,16,8,"left_battle_attack_message")
@@ -2477,7 +2479,7 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 		if(menuaction>1) screen_textl(6.5,2,5,5,0,0,9,,"<","battle_item")
 		if(length(menulist)>=menuaction+5) screen_textl(12,2,5,5,0,0,9,,">","battle_item")
 		menupos=1
-		curser.screen_loc="5:16,9:8"
+		cursor.screen_loc="5:16,9:8"
 	else if(screen=="battle_dart_refresh"&&slot)
 		for(var/obj/onscreen/invicon/O in client.screen) if(O.screentag=="battle_dart") del(O)
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="battle_dart") del(O)
@@ -2527,7 +2529,7 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 		if(menuaction>1) screen_textl(6.5,2,5,5,0,0,9,,"<","battle_dart")
 		if(length(menulist)>=menuaction+5) screen_textl(12,2,5,5,0,0,9,,">","battle_dart")
 		menupos=1
-		curser.screen_loc="5:16,9:8"
+		cursor.screen_loc="5:16,9:8"
 	else if(screen=="battle_askills"&&ActionType)
 		menupos = 1
 		menulist = new()
@@ -2561,8 +2563,8 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 			screen_invicon(X,Y,YO,9,Color,O.invicon,"battle_askills")
 			screen_textl(X+0.5,X+4,Y,Y,0,YO,9,Color,O.name,"battle_askills")
 			battle_screen("battle_askills_cost_refresh")
-			if(!curser) curser = new(client)
-			curser.screen_loc="2,6:16"
+			if(!cursor) cursor = new(client)
+			cursor.screen_loc="2,6:16"
 	else if(screen=="battle_askills_cost_refresh")
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag == "battle_askills_cost") del(O)
 		if(length(menulist)>=menupos)
@@ -2662,8 +2664,8 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 		var/obj_slot
 		for(var/obj/O in BLoc.obj_reward){obj_slot++;battle_screen("monster_drop_list",obj_slot)}
 		menupos = 1
-		curser = new(client)
-		curser.screen_loc = "3,12:8"
+		cursor = new(client)
+		cursor.screen_loc = "3,12:8"
 	else if(screen=="monster_drop_list"&&slot)
 		for(var/obj/onscreen/O in client.screen) if(O.screentag == "monster_drop[slot]") del(O)
 		var/turf/battle/location/BLoc = locate(/turf/battle/location) in view(src)
@@ -2688,4 +2690,4 @@ mob/PC/proc/battle_screen(var/screen,var/slot,var/obj/Ability/ActionType)
 		inmenu = "monster_drop_tp"
 		menuanswer = menupos
 		menupos = 1
-		curser.screen_loc = "9,14:8"
+		cursor.screen_loc = "9,14:8"

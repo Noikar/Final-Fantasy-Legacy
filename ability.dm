@@ -180,7 +180,7 @@ mob/PC/proc/btl_target(var/obj/Ability/Action,direction)
 				close_screen("battle_askills")
 				close_screen("battle_askills_cost")
 				close_screen("battle_menu")
-				for(var/obj/onscreen/curser/C in client.screen) del(C)
+				for(var/obj/onscreen/cursor/C in client.screen) del(C)
 				if(!btl_action||!length(menulist)) return
 				//setting the action's preparing time
 				var/action_time=10
@@ -206,34 +206,34 @@ mob/PC/proc/btl_target(var/obj/Ability/Action,direction)
 			if(menuaction<=2) for(var/mob/T in BLoc.Defenders) if(T.HP>0||Action.Revive) menulist += T
 			else if(menuaction>=3) for(var/mob/T in BLoc.Attackers) if(T.HP>0||Action.Revive) menulist += T
 	//Target(s) acquired, displaying it (them).
-	for(var/obj/onscreen/curser/C in client.screen) del(C) //deleting all old cursers
+	for(var/obj/onscreen/cursor/C in client.screen) del(C) //deleting all old cursors
 	if(!length(menulist)) return //no one to target!
 	var/list/TargList = new()
 	if(menuaction==1||menuaction==4) for(var/mob/T in menulist) TargList += T
 	else
 		if(length(menulist)>=menupos) TargList += menulist[menupos]
 		else client.Northwest()
-	//creating the cursers
+	//creating the cursors
 	for(var/mob/T in TargList)
 		var/Mod = 1
 		for(var/R in btl_attrib(Action)) if(T.Resist.Find(R)) Mod -= (T.Resist[R]/100)
-		curser=new(client)
+		cursor=new(client)
 		var/T_height = 1
 		var/T_x
 		if(!istype(T,/mob/PC))
-			if(Mod<1) curser.icon_state="bad"
-			else if(Mod>1) curser.icon_state="good"
+			if(Mod<1) cursor.icon_state="bad"
+			else if(Mod>1) cursor.icon_state="good"
 			var/mob/monster/M = T
 			T_x = M.monster_x_start
 			T_height = M.monster_y_start + M.monster_y_end
-		//calculating curser position
-		var/curser_x = T.x - BLoc.x + T_x + 8
-		var/curser_y = T.y - BLoc.y + 10
+		//calculating cursor position
+		var/cursor_x = T.x - BLoc.x + T_x + 8
+		var/cursor_y = T.y - BLoc.y + 10
 		if(T_height)
 			T_height/=2
-			if(T_height!=round(T_height)){curser_y+=round(T_height);T_height=16}
-			else {curser_y+=T_height;T_height=0}
-		curser.screen_loc="[curser_x]:16,[curser_y]:[T_height]"
+			if(T_height!=round(T_height)){cursor_y+=round(T_height);T_height=16}
+			else {cursor_y+=T_height;T_height=0}
+		cursor.screen_loc="[cursor_x]:16,[cursor_y]:[T_height]"
 
 obj/Ability
 	var

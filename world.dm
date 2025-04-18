@@ -820,7 +820,7 @@ mob/PC
 						chat_toggle[toggle] = 1
 						usr<< "* You have enabled local say"
 					if("Disable")
-						usr.verbs -= /mob/PC/verb/msay
+						usr.verbs -= /mob/PC/verb/say
 						chat_toggle[toggle] = 0
 						usr<< "* You have disabled local say"
 					if("Cancel")

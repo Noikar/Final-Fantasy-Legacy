@@ -64,7 +64,7 @@ mob/PC/proc/bank(var/action,var/obj/what)
 		menuaction="gold"
 		inmenu="bankaction"
 		menupos=1
-		curser.screen_loc="2,13:8"
+		cursor.screen_loc="2,13:8"
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="bankmessage") del O
 		screen_textl(3,16,15.5,15.5,0,0,5,,"What do you want?","bankmessage")
 
@@ -79,8 +79,8 @@ mob/PC/proc/bank_screen(var/screen,var/ext)
 		screen_textl(3,5,13.5,13.5,0,0,5,,"Item","bank")
 		screen_textl(6.5,8.5,13.5,13.5,0,0,5,,"Gold","bank")
 		menupos=1
-		curser=new(client)
-		curser.screen_loc="2,13:8"
+		cursor=new(client)
+		cursor.screen_loc="2,13:8"
 	else if((screen=="bankaction")&&(ext=="item"||ext=="gold"))
 		inmenu="bankaction"
 		menuaction=ext
@@ -88,7 +88,7 @@ mob/PC/proc/bank_screen(var/screen,var/ext)
 		screen_textl(3,5,13.5,13.5,0,0,5,,"Give","bankaction")
 		screen_textl(6.5,8.5,13.5,13.5,0,0,5,,"Take","bankaction")
 		menupos=1
-		curser.screen_loc="2,13:8"
+		cursor.screen_loc="2,13:8"
 	else if((screen=="bankaction")&&(ext=="item give")||(ext=="item take"))
 		if(inmenu!="bank_item")
 			screen_background(2,16,2,12,0,0,4,"bank_item")
@@ -103,7 +103,7 @@ mob/PC/proc/bank_screen(var/screen,var/ext)
 			for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="bankmessage") del O
 			screen_textl(3,16,15.5,15.5,0,0,5,,"[prefix] what?","bankmessage")
 			menupos=1
-			curser.screen_loc="2,11:8"
+			cursor.screen_loc="2,11:8"
 		// Creating list in menu
 		var/itemslot=0
 		for(var/obj/O in menulist)
@@ -243,7 +243,7 @@ mob/PC/proc/bank_screen(var/screen,var/ext)
 		screen_background(6,11,11,12,0,0,4,"bank_gold_numbox")
 		screen_textr(6.5,11,11.5,11.5,0,0,5,,"0GP","bank_gold_numbox")
 		menupos=1
-		curser.screen_loc="6,11:8"
+		cursor.screen_loc="6,11:8"
 	else if(screen=="bank_gold_refresh")
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="bank_gold_numbox") del(O)
 		screen_textr(6.5,11,11.5,11.5,0,0,5,,"[num2text(input_box,10)]GP","bank_gold_numbox")

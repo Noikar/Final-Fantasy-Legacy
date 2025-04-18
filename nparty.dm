@@ -1,13 +1,30 @@
 var/const/max_ppl_party = 5
 mob/PC
-	var/tmp/list/party
+	var/row_position = 1 // 1 = Front Row, 2 = Back Row
 	var/tmp
+		list/party
 		formation
 		inparty
 		pstatus
 		pmoves
 		bosspanel = 0
+
 	proc
+		ToggleRow()
+			if(!party || party.len <= 1)
+				row_position = (row_position == 1) ? 2 : 1
+				info(src, null, "Your row position has been toggled.")
+				return
+
+			if(src != party[1])
+				src << "<span class='warning'>Only the party leader can change the party's row formation.</span>"
+				return
+
+			var/first_row = party[1].row_position
+			var/new_start = (first_row == 1) ? 2 : 1
+			alternate_rows(new_start)
+			info(src, party, "Party row formation has been toggled.")
+			
 		move_party()
 			for(var/mob/PC/p in party)
 				var/mob/PC/leader
@@ -46,6 +63,7 @@ mob/PC
 			verbs-=/mob/PC/proc/leave_party
 			verbs-=/mob/PC/proc/lock_party
 			verbs-=/mob/PC/proc/kick_member
+			alternate_rows(1) // Always start with front row
 		update_party()
 			var/party_slots
 			for(var/mob/PC/p in party)
@@ -81,6 +99,7 @@ mob/PC
 										if(p!=src) info(null,list(p),"[src] has joined the party.")
 										else info(null,list(p),"You joined with [M] to fight against the evils!")
 									M.update_party()
+									M.alternate_rows(1) // Always alternate after join
 									M.party_gt()
 									return
 								else info(null,list(src),"Cannot join party (full).")
@@ -119,47 +138,53 @@ mob/PC
 				p.pmoves = null
 			if(inmenu == "party_gt") inmenu=null
 
+		alternate_rows(start_with_front = 1)
+			for(var/i = 1, i <= party.len, i++)
+				var/mob/PC/p = party[i]
+				if(p)
+					if(start_with_front)
+						p.row_position = (i % 2 == 1) ? 1 : 2 // 1=front, 2=back
+					else
+						p.row_position = (i % 2 == 1) ? 2 : 1
+
 mob/PC/var/tmp
 	isMoving = 0	//This is used to check if the player is moving. If so, further movement is not allowed until current movement stops and the var is reset.
 
-mob/PC/Move()		// Overrides the base mob/Move specifically for PCs
-	// --- Cooldown Check ---
+mob/PC/Move()
 	if (src.isMoving)
-		return 0	// Block move if already moving
+		return 0
 
-	// --- Set Cooldown ---
 	src.isMoving = 1
-	spawn(world.tick_lag) 		// Adjust multiplier based on animation speed
-		if(src) src.isMoving = 0	// Reset after delay
+	spawn(world.tick_lag)
+		if(src) src.isMoving = 0
 
-	// --- Party Pre-Move Logic ---
-	if(party && src == party[1] && !inbattle)
-		for(var/mob/PC/p in party)
-			if(p.inparty != 1)
-				var/mob/PC/m = party[p.inparty - 1]
-				if(get_dist(m, p) == 1) p.pmoves = m.dir
-				else if(get_dist(m, p) >= 2) p.pmoves = "OUTOFSIGHT"
-				else p.pmoves = null
+	var/original_x = src.x
+	var/original_y = src.y
+	var/original_z = src.z
 
-	// --- Execute Original Move ---
-	var/move_result = ..() // Calls the original mob/Move logic
+	var/move_result = ..()
 
-	// --- Party Post-Move Logic ---
-	if(party && src == party[1] && !inbattle)
-		if (move_result == 1) // Only move followers if leader's move started
-			for(var/mob/PC/p in party)
-				if(p.inparty != 1)
-					var/mob/PC/m = party[p.inparty - 1]
-					if(p.pmoves == "OUTOFSIGHT")
-						// Use step_to for smoother teleport/catch-up
-						step_to(p, m, 0)
-						p.dir = m.dir // Match direction
-					else if(p.pmoves)
-						step(p, p.pmoves)
-					p.pmoves = null // Clear stored move
-		else // Leader move failed, clear follower intentions
-			for(var/mob/PC/p in party)
-				if(p.inparty != 1) p.pmoves = null
+	if (move_result == 1 && party && src == party[1] && !inbattle)
+		var/leader_moved_dir = get_dir(locate(original_x, original_y, original_z), src)
+		var/moved_dir = leader_moved_dir
 
+		for(var/i = 2; i <= party.len; i++)
+			var/mob/PC/p = party[i]
+			var/mob/PC/m = party[i-1]
+
+			if(!p || !m) continue
+
+			if(get_dist(p, m) >= 2 || get_dist(p, src) > i)
+				step_to(p, m, 0)
+				p.dir = m.dir
+				moved_dir = null
+			else if (moved_dir)
+				if (step(p, moved_dir))
+					// Keep moved_dir for the next follower
+					continue
+				else
+					moved_dir = null // Stop chain if blocked
+			else
+				moved_dir = null // Ensure chain stops if previous didn't move via direction
 
 	return move_result

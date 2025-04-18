@@ -1,3 +1,16 @@
+var/const
+	//menu
+	MENU_ITEM = 1
+	MENU_MAGIC = 2
+	MENU_EQUIP = 3
+	MENU_STATUS = 4
+	MENU_ORDER = 5
+	MENU_ROW = 6
+	MENU_CUSTOM = 7
+	MENU_TRADE = 8
+	MENU_SAVE = 9
+
+
 mob/PC/proc/screen(screen,ext)
 	if(screen=="menu")
 		inmenu="menu"
@@ -7,14 +20,14 @@ mob/PC/proc/screen(screen,ext)
 		screen_textl(14,17,15.5,15.5,0,0,5,,"Magic","menu")
 		screen_textl(14,17,14.5,14.5,0,0,5,,"Equip","menu")
 		screen_textl(14,17,13.5,13.5,0,0,5,,"Status","menu")
-		screen_textl(14,17,12.5,12.5,0,0,5,,"Form","menu")
-		screen_textl(14,17,11.5,11.5,0,0,5,,"Change","menu")
+		screen_textl(14,17,12.5,12.5,0,0,5,,"Order","menu")
+		screen_textl(14,17,11.5,11.5,0,0,5,,"Row","menu")
 		screen_textl(14,17,10.5,10.5,0,0,5,,"Custom","menu")
 		screen_textl(14,17,9.5,9.5,0,0,5,,"Trade","menu")
 		screen_textl(14,17,8.5,8.5,0,0,5,,"Save","menu")
 		menupos=1
-		curser=new(client)
-		curser.screen_loc="13,16:8"
+		cursor=new(client)
+		cursor.screen_loc="13,16:8"
 		//play time
 		screen_background(13,17,4,7,0,0,4,"menu")
 		screen_textl(14,17,6.5,6.5,0,0,5,,"Time","menu")
@@ -34,56 +47,29 @@ mob/PC/proc/screen(screen,ext)
 			if(3){menu_bg = 1;menu_txt = 8}
 			if(4){menu_bg = 1;menu_txt = 4}
 			if(5){menu_bg = 1;menu_txt = 0}
-		p = party[1]
 		screen_background(1,13,menu_bg,17,0,0,3,"menu")
-		screen_portrait(1,14,16,menu_txt,5,p.icon,"menu")
-		screen_textl(5,11.5,15.5,15.5,0,menu_txt - 8,5,,p.class,"menu")
-		screen_textl(5, 8.5,15,15,0,menu_txt - 8,5,,p.name,"menu")
-		screen_textl(9,11.5,15,15,0,menu_txt - 8,5,,"Lv.[p.level]","menu")
-		screen_textl(5.5,6.5,14.5,14.5,0,menu_txt - 8,5,,"HP","menu")
-		screen_textr(6.5, 11,14.5,14.5,0,menu_txt - 8,5,,"[p.HP]/[p.MaxHP]","menu_s1")
-		screen_textl(5.5,6.5,14,14,0,menu_txt - 8,5,,"MP","menu")
-		screen_textr(6.5, 11,14,14,0,menu_txt - 8,5,,"[p.MP]/[p.MaxMP]","menu_s1")
-		if(length(party)>=2)
-			p = party[2]
-			screen_portrait(2,11,16,8 + menu_txt,5,p.icon,"menu")
-			screen_textl(5,11.5,12.5,12.5,0,menu_txt,5,,p.class,"menu")
-			screen_textl(5, 8.5,12,12,0,menu_txt,5,,p.name,"menu")
-			screen_textl(9,11.5,12,12,0,menu_txt,5,,"Lv.[p.level]","menu")
-			screen_textl(5.5,6.5,11.5,11.5,0,menu_txt,5,,"HP","menu")
-			screen_textr(6.5, 11,11.5,11.5,0,menu_txt,5,,"[p.HP]/[p.MaxHP]","menu_s2")
-			screen_textl(5.5,6.5,11,11,0,menu_txt,5,,"MP","menu")
-			screen_textr(6.5, 11,11,11,0,menu_txt,5,,"[p.MP]/[p.MaxMP]","menu_s2")
-		if(length(party)>=3)
-			p = party[3]
-			screen_portrait(1,8 ,16,16 + menu_txt,5,p.icon,"menu")
-			screen_textl(5,11.5,9.5,9.5,0,8 + menu_txt,5,,p.class,"menu")
-			screen_textl(5, 8.5,9,9,0,8 + menu_txt,5,,p.name,"menu")
-			screen_textl(9,11.5,9,9,0,8 + menu_txt,5,,"Lv.[p.level]","menu")
-			screen_textl(5.5,6.5,8.5,8.5,0,8 + menu_txt,5,,"HP","menu")
-			screen_textr(6.5, 11,8.5,8.5,0,8 + menu_txt,5,,"[p.HP]/[p.MaxHP]","menu_s3")
-			screen_textl(5.5,6.5,8,8,0,8 + menu_txt,5,,"MP","menu")
-			screen_textr(6.5, 11,8,8,0,8 + menu_txt,5,,"[p.MP]/[p.MaxMP]","menu_s3")
-		if(length(party)>=4)
-			p = party[4]
-			screen_portrait(2,5 ,16,24 + menu_txt,5,p.icon,"menu")
-			screen_textl(5,11.5,6.5,6.5,0,16 + menu_txt,5,,p.class,"menu")
-			screen_textl(5, 8.5,6,6,0,16 + menu_txt,5,,p.name,"menu")
-			screen_textl(9,11.5,6,6,0,16 + menu_txt,5,,"Lv.[p.level]","menu")
-			screen_textl(5.5,6.5,5.5,5.5,0,16 + menu_txt,5,,"HP","menu")
-			screen_textr(6.5, 11,5.5,5.5,0,16 + menu_txt,5,,"[p.HP]/[p.MaxHP]","menu_s4")
-			screen_textl(5.5,6.5,5,5,0,16 + menu_txt,5,,"MP","menu")
-			screen_textr(6.5, 11,5,5,0,16 + menu_txt,5,,"[p.MP]/[p.MaxMP]","menu_s4")
-		if(length(party)>=5)
-			p = party[5]
-			screen_portrait(1,3 ,16,menu_txt,5,p.icon,"menu")
-			screen_textl(5,11.5,4.5,4.5,0,menu_txt - 8,5,,p.class,"menu")
-			screen_textl(5, 8.5,4,4,0,menu_txt - 8,5,,p.name,"menu")
-			screen_textl(9,11.5,4,4,0,menu_txt - 8,5,,"Lv.[p.level]","menu")
-			screen_textl(5.5,6.5,3.5,3.5,0,menu_txt - 8,5,,"HP","menu")
-			screen_textr(6.5, 11,3.5,3.5,0,menu_txt - 8,5,,"[p.HP]/[p.MaxHP]","menu_s5")
-			screen_textl(5.5,6.5,3,3,0,menu_txt - 8,5,,"MP","menu")
-			screen_textr(6.5, 11,3,3,0,menu_txt - 8,5,,"[p.MP]/[p.MaxMP]","menu_s5")
+
+		for(var/i = 1, i <= length(party), i++)
+			p = party[i]
+			var/px, py, poffset
+			switch(i)
+				if(1) {py = 14; poffset = menu_txt;}
+				if(2) {py = 11; poffset = 8 + menu_txt;}
+				if(3) {py = 8;  poffset = 16 + menu_txt;}
+				if(4) {py = 5;  poffset = 24 + menu_txt;}
+				if(5) {py = 3;  poffset = menu_txt - 8;}
+			if(p.row_position == 1) // Front row: left side
+				px = 1
+			else // Back row: right side
+				px = 2
+			screen_portrait(px, py, 16, poffset, 5, p.icon, "menu")
+			screen_textl(5,11.5,py+1.5,py+1.5,0,poffset-8,5,,p.class,"menu")
+			screen_textl(5,8.5,py,py,0,poffset-8,5,,p.name,"menu")
+			screen_textl(9,11.5,py,py,0,poffset-8,5,,"Lv.[p.level]","menu")
+			screen_textl(5.5,6.5,py-0.5,py-0.5,0,poffset-8,5,,"HP","menu")
+			screen_textr(6.5,11,py-0.5,py-0.5,0,poffset-8,5,,"[p.HP]/[p.MaxHP]","menu_s[i]")
+			screen_textl(5.5,6.5,py-1,py-1,0,poffset-8,5,,"MP","menu")
+			screen_textr(6.5,11,py-1,py-1,0,poffset-8,5,,"[p.MP]/[p.MaxMP]","menu_s[i]")
 	else if(screen=="menu_srefresh" && ext)
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="menu_s[ext]") del(O)
 		var/mob/PC/p = party[ext]
@@ -234,7 +220,7 @@ mob/PC/proc/screen(screen,ext)
 						screen_textl(15.5,16,5.5,5.5,0,0,8,Color,":","item")
 						screen_textr(14.5,16.5,5.5,5.5,0,0,8,Color,O.suffix,"item")
 		menupos=1
-		curser.screen_loc="1,14:8"
+		cursor.screen_loc="1,14:8"
 	else if(screen=="magic_type")
 		inmenu = "magic_type"
 		screen_background(1,6,14,17,0,0,7,"magic_type")
@@ -242,7 +228,7 @@ mob/PC/proc/screen(screen,ext)
 		screen_textl(2,6,15.5,15.5,16,12,8,0,"[action[3]]","magic_type")
 		screen_textl(2,6,14.5,14.5,16,16,8,0,"[action[4]]","magic_type")
 		menupos=1
-		curser.screen_loc="1:16,16:16"
+		cursor.screen_loc="1:16,16:16"
 		//info
 		screen_background(7,17,14,17,0,0,7,"magic_type")
 		screen_portrait(8,15,13,8,8,icon,"magic_type")
@@ -284,7 +270,7 @@ mob/PC/proc/screen(screen,ext)
 			screen_invicon(X,Y,YO,8,Color,O.invicon,"magic")
 			screen_textl(X+0.5,X+4,Y,Y,0,YO,8,Color,O.name,"magic")
 		menupos = 1
-		curser.screen_loc="2:8,11:16"
+		cursor.screen_loc="2:8,11:16"
 		screen("magic_cost")
 	else if(screen=="magic_cost")
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag == "magic_cost") del(O)
@@ -324,7 +310,7 @@ mob/PC/proc/screen(screen,ext)
 			screen_invicon(11,12.5,0,8,,arm.invicon,"equip")
 			screen_textl(11.5,16.5,12.5,12.5,0,0,8,,arm.name,"equip")
 		menupos=1
-		curser.screen_loc="7,16:8"
+		cursor.screen_loc="7,16:8"
 	else if(screen=="equiprefresh")
 		inmenu="equip"
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="equip") del O
@@ -358,7 +344,7 @@ mob/PC/proc/screen(screen,ext)
 			screen_invicon(11,12.5,0,8,,arm.invicon,"equip")
 			screen_textl(11.5,16.5,12.5,12.5,0,0,8,,arm.name,"equip")
 		menupos=1
-		curser.screen_loc="7,16:8"
+		cursor.screen_loc="7,16:8"
 	else if(screen=="equiplist"&&ext)
 		inmenu="equiplist"
 		screen_background(1,17,1,11,0,0,7,"equiplist")
@@ -386,7 +372,7 @@ mob/PC/proc/screen(screen,ext)
 				if(9){screen_invicon(2,5.5,0,8,,O.invicon,"equiplist");screen_textl(2.5,9,5.5,5.5,0,0,8,,O.name,"equiplist")}
 				if(10){screen_invicon(10,5.5,0,8,,O.invicon,"equiplist");screen_textl(10.5,16,5.5,5.5,0,0,8,,O.name,"equiplist")}
 		menupos=1
-		curser.screen_loc="1,9:8"
+		cursor.screen_loc="1,9:8"
 	else if(screen=="status")
 		inmenu="status"
 		//status tab
@@ -459,8 +445,8 @@ mob/PC/proc/screen(screen,ext)
 				var/area/saved_location/A = locate(L) in world
 				menulist += A
 				for(var/mob/PC/p in party) if(!p.visited_location.Find(A.type)){menulist -= A;break}
-			if(!curser) curser = new(client)
-			curser.screen_loc = "3,11:16"
+			if(!cursor) cursor = new(client)
+			cursor.screen_loc = "3,11:16"
 			screen("teleport",1)
 		else
 			for(var/obj/onscreen/text/O in client.screen) if(O.screentag == "teleport") del(O)
@@ -517,16 +503,16 @@ mob/PC/proc
 		else
 			if(length(menulist) >= menupos) C_List += menulist[menupos]
 			else return
-		for(var/obj/onscreen/curser/C in client.screen) del(C) //deleting all old cursers
-		//creating new cursers
+		for(var/obj/onscreen/cursor/C in client.screen) del(C) //deleting all old cursors
+		//creating new cursors
 		for(var/mob/T in C_List)
-			curser = new(client)
+			cursor = new(client)
 			switch(party.Find(T))
-				if(1) curser.screen_loc="2,14:8"
-				if(2) curser.screen_loc="2,11:16"
-				if(3) curser.screen_loc="2,8:24"
-				if(4) curser.screen_loc="2,6:0"
-				if(5) curser.screen_loc="2,3:8"
+				if(1) cursor.screen_loc="2,14:8"
+				if(2) cursor.screen_loc="2,11:16"
+				if(3) cursor.screen_loc="2,8:24"
+				if(4) cursor.screen_loc="2,6:0"
+				if(5) cursor.screen_loc="2,3:8"
 	equip(var/where,var/obj/what)
 		if(where=="rhand")
 			if(istype(what,/obj/weapon)&&istype(lhand,/obj/weapon))
@@ -554,6 +540,7 @@ mob/PC/proc
 			else if(istype(what,/obj/shield/Arrow)&&istype(lhand,/obj/weapon/Harp)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/shield/Arrow)&&istype(lhand,/obj/weapon/Rod)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/shield/Arrow)&&istype(lhand,/obj/weapon/Staff)){src<<SOUND_WRONG;return}
+			else if(istype(what,/obj/shield)&&istype(lhand,/obj/shield)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/shield)&&istype(lhand,/obj/weapon/Wrench)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/weapon/Knife)&&istype(lhand,/obj/shield/Arrow)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/weapon/Sword)&&istype(lhand,/obj/shield/Arrow)){src<<SOUND_WRONG;return}
@@ -566,7 +553,6 @@ mob/PC/proc
 			else if(istype(what,/obj/weapon/Harp)&&istype(lhand,/obj/shield/Arrow)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/weapon/Rod)&&istype(lhand,/obj/shield/Arrow)){src<<SOUND_WRONG;return}
 			else if(istype(what,/obj/weapon/Staff)&&istype(lhand,/obj/shield/Arrow)){src<<SOUND_WRONG;return}
-			else if(istype(what,/obj/shield)&&istype(lhand,/obj/shield)){src<<SOUND_WRONG;return}
 			else
 				if(class in what.equip)
 					var/obj/old = rhand
@@ -713,4 +699,3 @@ mob/PC/proc
 		else xM = wis
 		var/Heal = round(((round(xM/8)+2) * (round(xM/2)+M.Damage)) / length(TargList))
 		for(var/mob/PC/p in TargList){p.HP+=Heal;if(p.HP>p.MaxHP) p.HP=p.MaxHP}
-

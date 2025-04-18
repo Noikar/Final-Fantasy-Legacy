@@ -8,7 +8,7 @@ mob/var/tmp
 	sleep_in_message
 	list/menulist = new()
 	list/text_list = new()
-	obj/onscreen/curser/curser
+	obj/onscreen/cursor/cursor
 
 mob/proc
 	//common proc
@@ -24,11 +24,11 @@ mob/proc
 		screen_textl(3,5.5,9.5,9.5,0,0,11,,"No","yesno")
 		menuanswer=0
 		menupos=1
-		curser=new(client)
-		curser.screen_loc="2,10:8"
+		cursor=new(client)
+		cursor.screen_loc="2,10:8"
 		while(!menuanswer) sleep(5)
 		close_screen("yesno")
-		del(curser)
+		del(cursor)
 		inmenu=screen
 		if(menuanswer==1) return 1
 		else return 0
@@ -259,8 +259,8 @@ obj/onscreen
 		layer=MOB_LAYER+5
 	playericon
 		layer=MOB_LAYER+5
-	curser
-		icon='screen/curser.dmi'
+	cursor
+		icon='screen/cursor.dmi'
 		layer=MOB_LAYER+10
 	New(client/C,layr,stag)
 		C.screen+=src

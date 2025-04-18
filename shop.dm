@@ -75,7 +75,7 @@ mob/PC/proc/shop(var/action, var/obj/item, var/num)
 				close_screen("shopbuynum_numbox")
 				close_screen("shopbuynum")
 				menupos=1
-				curser.screen_loc="2,11:8"
+				cursor.screen_loc="2,11:8"
 			// thank you screen
 			inmenu="shop_thanks"
 			screen_background(6,12,8,9,0,0,11,"shop_thanks")
@@ -92,7 +92,7 @@ mob/PC/proc/shop(var/action, var/obj/item, var/num)
 			close_screen("shopsellnum_numbox")
 			close_screen("shopsellnum")
 			menupos=1
-			curser.screen_loc="2,11:8"
+			cursor.screen_loc="2,11:8"
 			inmenu="shopsell"
 			shop_screen("shopsell_refresh")
 	src<<SOUND_CASH
@@ -135,8 +135,8 @@ mob/proc
 		menulist=list("A","B","C","D","E","a","b","c","d","e","F","G","H","I","J","f","g","h","i","j","K","L","M","N","O","k","l","m","n","o","P","Q","R","S","T","p","q","r","s","t","U","V","W","X","Y","u","v","w","x","y","Z","0","1","2","3","z","!","?","%","/","4","5","6","7","8",":"," ","9","'",".","-")
 		menuanswer=null
 		menupos=1
-		if(!curser) curser = new(client)
-		curser.screen_loc="4,10:12"
+		if(!cursor) cursor = new(client)
+		cursor.screen_loc="4,10:12"
 		input_box = p.name
 		menuaction = p.name
 		//then, waiting for the user to enter its name.
@@ -144,7 +144,7 @@ mob/proc
 		close_screen("character_name_text")
 		close_screen("character_name_input")
 		close_screen("character_name")
-		del(curser)
+		del(cursor)
 		inmenu=screen
 		return menuanswer
 	namingway_refresh(dflt_name)
@@ -158,7 +158,7 @@ mob/PC/proc/trade_screen(var/screen,var/PC/mob/trade)
 		menulist=src.contents
 
 
-		curser.screen_loc="10,14:24"
+		cursor.screen_loc="10,14:24"
 
 		screen_background(1,9,3,17,0,0,7,"trade")			//my inventory
 
@@ -315,8 +315,8 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 			p = party[5]
 			screen_player(14,7,10,-10,6,p.icon,"battle_walk","shop_party")
 		menupos=1
-		curser=new(client)
-		curser.screen_loc="2,13:8"
+		cursor=new(client)
+		cursor.screen_loc="2,13:8"
 	else if(screen=="shopbuy"&&!shop)
 		inmenu="shopbuy"
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="shopmessage") del O
@@ -324,7 +324,7 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 		screen_background(2,13,2,12,0,0,6,"shopbuy")
 		shop_screen("shopbuy",1)
 		menupos=1
-		curser.screen_loc="2,11:8"
+		cursor.screen_loc="2,11:8"
 	else if(screen=="shopbuy"&&shop)
 		for(var/obj/onscreen/text/S in client.screen) if(S.screentag=="shopbuy") del S
 		for(var/obj/onscreen/invicon/S in client.screen) if(S.screentag=="shopbuy") del S
@@ -342,7 +342,7 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 				screen_textl(7,16,15,15,0,10,6,,"May I help you?","shopmessage")
 				close_screen("shopbuy")
 				menupos=1
-				curser.screen_loc="2,13:8"
+				cursor.screen_loc="2,13:8"
 				inmenu="shop"
 		var/wareslot=0
 		for(var/i=menuaction,i<=menuaction+10,i++)
@@ -403,7 +403,7 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 		screen_textl(9,9.5,9.5,9.5,0,0,10,,"x","shopbuynum")
 		screen_textl(7,10,8.5,8.5,0,0,10,,"That's","shopbuynum")
 		menupos=1
-		curser.screen_loc="9:16,9:8"
+		cursor.screen_loc="9:16,9:8"
 		shop_screen("shopbuynum_refresh")
 	else if(screen=="shopbuynum_refresh")
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="shopbuynum_numbox"||O.screentag=="shopbuynum_price") del(O)
@@ -416,7 +416,7 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 		screen_textl(8,16,15.5,15.5,0,0,10,,"Which one?","shopmessage")
 		shop_screen("shopsell_refresh")
 		menupos=1
-		curser.screen_loc="2,11:8"
+		cursor.screen_loc="2,11:8"
 	else if(screen=="shopsell_refresh")
 		var/itemslot=0
 		for(var/obj/onscreen/text/S in client.screen) if(S.screentag=="shopsell") del S
@@ -557,8 +557,8 @@ mob/PC/proc/shop_screen(var/screen,var/mob/shop)
 		if(istype(shopitem,/obj/Ability/Basic/Item)) screen_textl(9,9.5,9.5,9.5,0,0,13,,"x","shopsellnum")
 		screen_textl(7,10,8.5,8.5,0,0,13,,"That's","shopsellnum")
 		menupos=1
-		if(istype(shopitem,/obj/Ability/Basic/Item)) curser.screen_loc="9:16,9:8"
-		else curser.screen_loc="2,11:8"
+		if(istype(shopitem,/obj/Ability/Basic/Item)) cursor.screen_loc="9:16,9:8"
+		else cursor.screen_loc="2,11:8"
 		shop_screen("shopsellnum_refresh")
 	else if(screen=="shopsellnum_refresh")
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="shopsellnum_numbox"||O.screentag=="shopsellnum_price") del(O)

@@ -10,11 +10,11 @@ mob
 					screen_textl(13,16,8.5,8.5,0,0,11,,"Delete","character_load_delete")
 					menuanswer=0
 					menupos=1
-					curser=new(client)
-					curser.screen_loc="12,9:8"
+					cursor=new(client)
+					cursor.screen_loc="12,9:8"
 					while(!menuanswer) sleep(5)
 					close_screen("character_load_delete")
-					del(curser)
+					del(cursor)
 					inmenu=screen
 					if(menuanswer==1) return 1
 					else return 0
@@ -25,16 +25,16 @@ mob
 					//changing the savefile directory to display the saves
 					F.cd = "/characters/"
 					menulist=new()
-					if(!curser) curser = new(client)
+					if(!cursor) cursor = new(client)
 					if(!menuaction||menuaction=="Load")
 						menuaction="Load"
 						menupos=1
-						curser.screen_loc = "1:16,14:8"
+						cursor.screen_loc = "1:16,14:8"
 						screen_textl(3,8,16,15.5,0,16,4,,"Load Game","character_menu_type")
 					else
 						menuaction="Save"
 						menupos=1
-						curser.screen_loc = "3,13"
+						cursor.screen_loc = "3,13"
 						screen_textl(3,8,16,15.5,0,16,4,,"Save Game","character_menu_type")
 					screen_background(1,17,13,16,0,0,3,"character_menu_slot1")
 					screen_background(1,17,9,12,0,0,3,"character_menu_slot2")
@@ -119,8 +119,8 @@ mob
 
 
 					menupos=1
-					if(!curser) curser = new(client)
-					curser.screen_loc = "1,14:16"
+					if(!cursor) cursor = new(client)
+					cursor.screen_loc = "1,14:16"
 
 
 					screen_background(1,17,2,16,0,0,3,"character_create")

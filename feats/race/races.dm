@@ -366,15 +366,15 @@ mob/PC/proc/chocobo_race_screen(var/screen,var/message)
 			screen_textl(5.5,14,11.5,11.5,0,0,5,0,"Feed my chocobo","chocobo_race_menu")
 			screen_textl(5.5,14,10.5,10.5,0,0,5,0,"Nothing","chocobo_race_menu")
 			menupos=1
-			curser = new(client)
-			curser.screen_loc="4:16,12:8"
+			cursor = new(client)
+			cursor.screen_loc="4:16,12:8"
 			//gold panel
 			screen_background(11,16,2,4,0,0,4,"chocobo_race_menu_gold")
 			screen_textr(11.5,15.5,3.5,3.5,0,0,5,,"[num2text(gold,10)]","chocobo_race_menu_gold")
 			screen_textl(15,16,2.5,2.5,0,0,5,,"GP","chocobo_race_menu_gold")
 		if("chocobo_race_menu_race")
 			inmenu="chocobo_race_menu_race"
-			del(curser)
+			del(cursor)
 			//setting the rank
 			var/rank = chocobo_rank()
 			//asking to race
@@ -387,8 +387,8 @@ mob/PC/proc/chocobo_race_screen(var/screen,var/message)
 						for(var/obj/onscreen/back/O in client.screen) if(O.screentag=="chocobo_race_menu_race") del(O)
 						inmenu="chocobo_race_menu"
 						menupos=1
-						curser = new(client)
-						curser.screen_loc="4:16,12:8"
+						cursor = new(client)
+						cursor.screen_loc="4:16,12:8"
 				else
 					if(chocobo_race_join(src,rank))
 						src.gold-=race_cost
@@ -402,15 +402,15 @@ mob/PC/proc/chocobo_race_screen(var/screen,var/message)
 							for(var/obj/onscreen/back/O in client.screen) if(O.screentag=="chocobo_race_menu_race") del(O)
 							inmenu="chocobo_race_menu"
 							menupos=1
-							curser = new(client)
-							curser.screen_loc="4:16,12:8"
+							cursor = new(client)
+							cursor.screen_loc="4:16,12:8"
 			else
 				for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="chocobo_race_menu_race") del(O)
 				for(var/obj/onscreen/back/O in client.screen) if(O.screentag=="chocobo_race_menu_race") del(O)
 				inmenu="chocobo_race_menu"
 				menupos=1
-				curser = new(client)
-				curser.screen_loc="4:16,12:8"
+				cursor = new(client)
+				cursor.screen_loc="4:16,12:8"
 		if("chocobo_race_menu_error")
 			var/current_inmenu = inmenu
 			inmenu="chocobo_race_menu_error"
@@ -431,7 +431,7 @@ mob/PC/proc/chocobo_race_screen(var/screen,var/message)
 			screen_textl(6,13,8.5,8.5,0,0,7,0,"Sylkis   800GP","chocobo_race_menu_feed")
 			screen_textl(6,13,7.5,7.5,0,0,7,0,"Nevermind","chocobo_race_menu_feed")
 			menupos=1
-			curser.screen_loc="5,12:8"
+			cursor.screen_loc="5,12:8"
 		if("chocobo_race_lap")
 			close_screen("chocobo_race_lap")
 			screen_textr(12,17,15.5,15.5,0,0,2,"Lap [lap]","chocobo_race_lap")
