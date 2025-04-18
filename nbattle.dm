@@ -6,6 +6,14 @@ var/const/battle_wait_time=20			//how much time in seconds we wait for the playe
 var/const/hunting_rate=8					//in steps
 var/const/encounter_rate=22				//in steps
 
+// Damage Type Constants
+var/const/DMG_PHYSICAL = 1
+var/const/DMG_MAGICAL = 2
+var/const/DMG_SUMMON = 3
+var/const/DMG_SWORD_MAGIC = 4
+var/const/DMG_DWAVE = 5
+
+
 // battle initialization
 proc
 	battle_initialize()
@@ -255,17 +263,32 @@ proc/Battle(turf/battle/location/BLoc,BType,list/Attackers,list/Defenders)
 		if(p.client){p.close_allscreen();p.client.eye=locate(BLoc.x,BLoc.y-1,BLoc.z)}
 		p.inbattle = 1
 		p.XLoc = Old_x;p.YLoc = Old_y;p.ZLoc = Old_z	//old location
+
+		// Determine horizontal position based on row
+		var/pos_x
+		if (p.row_position == 1) // Front Row
+			pos_x = BLoc.x + 5
+		else // Back Row (row_position == 2)
+			pos_x = BLoc.x + 6 // Further back
+
+		// Determine vertical position based on party order
+		var/pos_y
 		switch(Attackers.Find(p))
-			if(1) p.loc = locate(BLoc.x+5,BLoc.y+2,BLoc.z)
-			if(2) p.loc = locate(BLoc.x+6,BLoc.y+1,BLoc.z)
-			if(3) p.loc = locate(BLoc.x+5,BLoc.y,BLoc.z)
-			if(4) p.loc = locate(BLoc.x+6,BLoc.y-1,BLoc.z)
-			if(5) p.loc = locate(BLoc.x+5,BLoc.y-2,BLoc.z)
+			if(1) pos_y = BLoc.y + 2
+			if(2) pos_y = BLoc.y + 1
+			if(3) pos_y = BLoc.y
+			if(4) pos_y = BLoc.y - 1
+			if(5) pos_y = BLoc.y - 2
+			else  pos_y = BLoc.y // Default just in case
+
+		p.loc = locate(pos_x, pos_y, BLoc.z) // Set location using calculated x and y
+
 		p.dir=WEST
 		p.BtlFrm("battle_stand")
 		p.gauge = rand(round(atime(p.agi)/2),atime(p.agi))
 		BLoc.Attackers+=p
 		BLoc.nAttackers++
+
 	//now for the defender
 	L = Defenders[1];Old_x = L.x;Old_y = L.y;Old_z = L.z
 	for(var/mob/M in Defenders)	//can be PCs, or Monsters.
@@ -274,22 +297,39 @@ proc/Battle(turf/battle/location/BLoc,BType,list/Attackers,list/Defenders)
 			if(p.client){p.close_allscreen();p.client.eye=locate(BLoc.x,BLoc.y-1,BLoc.z)}
 			p.inbattle = 1
 			p.XLoc = Old_x;p.YLoc = Old_y;p.ZLoc = Old_z
+
+			// Determine horizontal position based on row
+			var/pos_x
+			if (p.row_position == 1) // Front Row
+				pos_x = BLoc.x - 5
+			else // Back Row (row_position == 2)
+				pos_x = BLoc.x - 6 // Further back
+
+			// Determine vertical position based on party order
+			var/pos_y
 			switch(Defenders.Find(p))
-				if(1) p.loc = locate(BLoc.x-5,BLoc.y+2,BLoc.z)
-				if(2) p.loc = locate(BLoc.x-6,BLoc.y+1,BLoc.z)
-				if(3) p.loc = locate(BLoc.x-5,BLoc.y,BLoc.z)
-				if(4) p.loc = locate(BLoc.x-6,BLoc.y-1,BLoc.z)
-				if(5) p.loc = locate(BLoc.x-5,BLoc.y-2,BLoc.z)
+				if(1) pos_y = BLoc.y + 2
+				if(2) pos_y = BLoc.y + 1
+				if(3) pos_y = BLoc.y
+				if(4) pos_y = BLoc.y - 1
+				if(5) pos_y = BLoc.y - 2
+				else  pos_y = BLoc.y // Default just in case
+
+			p.loc = locate(pos_x, pos_y, BLoc.z) // Set location using calculated x and y
+
 			p.dir=EAST
 			p.BtlFrm("battle_stand")
-		else
+		else // Monster positioning remains the same
 			var/mob/monster/p = M
 			p.loc = locate(BLoc.x+p.XLoc,BLoc.y+p.YLoc,BLoc.z)
 			BLoc.exp_reward += p.give_exp
 			BLoc.gp_reward += p.give_gold
+
+		// Monster gauge calculation (kept as original)
 		M.gauge = rand(round(atime(M.level)/2),atime(M.level))
 		BLoc.Defenders+=M
 		BLoc.nDefenders++
+
 	//loading up the battle panel
 	for(var/mob/PC/p in view(BLoc)) if(p.client) p.battle_screen("panel")
 	//everything's ready, starting the engine.. *vroom* *vroom* *cough*
@@ -697,7 +737,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 	if(!length(TargList)) return
 	//preparing the damage
 	switch(Action.DmgType)
-		if(1)	// PHYSICAL ATTACK
+		if(DMG_PHYSICAL)	// PHYSICAL ATTACK
 			var/base = att()
 			var/xAtt = xatt()
 			var/Attp = attp()
@@ -735,6 +775,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 				for(var/i=xDef,i>round(xDef/4),i--) if(prob(Defp)) xD++
 				if(xA<=xD){TargList[T]=0;continue} //miss
 				Damage = ((Damage - Defense) * (xA - xD)) * Mod
+				if (src.row_position == 2) Damage = round(Damage / 2) // Back Row damage reduction
 				for(var/mob/Z in TargList) if(Z.Jump_Charge>=1) Damage=0 // So you do not get any damage while charging jump. ~Crimson
 				if(T.Protect)
 					T.protect_counter++
@@ -759,7 +800,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 					if(src.cry_counter>cry_count) src.Cry=null
 					else Damage = Damage/2
 				TargList[T]=round(Damage)
-		if(2)	// MAGICAL ATTACK
+		if(DMG_MAGICAL)	// MAGICAL ATTACK
 			var/base = Action.Damage
 			var/xM
 			if(Action.Modifier) xM = xWhite()
@@ -815,7 +856,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 					if(T.strengthen_counter>strengthen_count) {T.Strengthen=null;T.strengthen_counter=0}
 					else Damage = Damage*3/2
 				TargList[T]=round(Damage)
-		if(3)  //SUMMONING MAGIC
+		if(DMG_SUMMON)  //SUMMONING MAGIC
 			var/base = Action.Damage
 			var/xM
 			if(Action.Modifier) xM = xWhite()
@@ -851,7 +892,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 					else Damage=Damage/2
 				if(T.Float&&Action.Attrib.Find("earth")) Damage = 0
 				TargList[T]=round(Damage)
-		if(4)//Sword && Magic Damage
+		if(DMG_SWORD_MAGIC)//Sword && Magic Damage
 			var/base = att()
 			var/xAtt = xatt()
 			var/Attp = attp()
@@ -929,7 +970,7 @@ mob/PC/proc/battle_action(obj/Ability/Action,mob/Target)
 					if(src.cry_counter>cry_count) {src.Cry=null;src.cry_counter=0}
 					else TDamage = round(TDamage/2)
 				TargList[T]=round(TDamage)
-		if(5)	// DWave damage
+		if(DMG_DWAVE)	// DWave damage
 			var/base = Action.Damage
 			var/xM
 			xM = xBlack()+xatt()
@@ -2011,7 +2052,7 @@ mob/proc/Damage(obj/Ability/Action, list/TargList)
 		if(Action.Curseable&&src.Curse) {disp_dmg(Target,"miss");continue}
 		if(istype(Target,/mob/PC))
 			var/mob/PC/T = Target
-			if(T.row_position == 2 && Action && Action.DmgType == 1) // 1 = physical
+			if(T.row_position == 2 && Action && Action.DmgType == DMG_PHYSICAL) // 1 = physical
 				Damage = round(Damage / 2)
 			if(Damage<0)
 				if(T.HP<=0&&Action.Revive)
@@ -2107,7 +2148,7 @@ mob
 	proc/btl_attrib(obj/Ability/Action)
 		if(Action)
 			var/list/attrib = new()
-			if(Action.DmgType == 1)
+			if(Action.DmgType == DMG_PHYSICAL)
 				if(istype(src,/mob/PC))
 					var/mob/PC/p = src
 					if(istype(p.lhand,/obj/weapon)) for(var/X in p.lhand.attrib) attrib+=X
@@ -2120,7 +2161,7 @@ mob
 	proc/btl_seffect(obj/Ability/Action)
 		if(Action)
 			var/list/seffect = new()
-			if(Action.DmgType == 1)
+			if(Action.DmgType == DMG_PHYSICAL)
 				if(istype(src,/mob/PC))
 					var/mob/PC/p = src
 					if(istype(p.lhand,/obj/weapon)) for(var/X in p.lhand.effect) seffect+=X
