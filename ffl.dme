@@ -11,6 +11,7 @@
 #include "clans.dm"
 #include "classes.dm"
 #include "client.dm"
+#include "encounters.dm"
 #include "hub.dm"
 #include "menu.dm"
 #include "misc.dm"
