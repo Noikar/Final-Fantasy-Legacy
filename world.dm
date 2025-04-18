@@ -204,7 +204,6 @@ proc
 		//setting prefix/suffix
 		switch(item)
 			if("wsay"){s_name = "other";s_text = "other";s_suffix=":"}
-			if("msay"){s_name = "other";s_text = "other";s_prefix="(";s_suffix=" msays):"}
 			if("wemote"){s_name = "other";s_text = "emote";s_prefix="* "}
 			if("say"){s_name = "other";s_text = "other";s_prefix="(";s_suffix="):"}
 			if("emote"){s_name = "other";s_text = "emote";s_prefix="* (";s_suffix=")"}
@@ -581,13 +580,6 @@ mob/PC
 			for(var/mob/PC/p in world) if(!p.wignore) world_list+=p
 			if(text) chat("wsay",usr,world_list,text)
 			SayLog("<[time2text(world.realtime,"MMM DD YY, hh:mm")]> [src.key] wsay: [text]")
-		msay(text as text)
-			set category="Social"
-			var/list/world_list = new()
-			for(var/mob/PC/p in world) if(!p.wignore) world_list+=p
-			if(text) chat("msay",usr,world_list,text)
-			SayLog("<[time2text(world.realtime,"MMM DD YY, hh:mm")]> [src.key] msays: [text]")
-
 		wemote(text as text)
 			set category="Social"
 			var/list/world_list = new()
@@ -845,18 +837,6 @@ mob/PC
 						usr<< "* You have disabled whispers"
 					if("Cancel")
 						return
-			if(toggle == "msay")
-				switch(alert(src,"Mature Say does not have any rules and flaming is allowed.  If you get offended by any of the material on Msay, it is your personal problem.  GMs have limited power on Msay, and if you cannot handle what is being said, you should leave (or will be kicked out)","Toggle Msay","Enable","Disable","Cancel"))
-					if("Enable")
-						usr.verbs+= /mob/PC/verb/msay
-						chat_toggle[toggle] = 1
-						usr<< "* You have enabled msay"
-					if("Disable")
-						usr.verbs -= /mob/PC/verb/msay
-						chat_toggle[toggle] = 0
-						usr<< "* You have disabled msay"
-					if("Cancel")
-						return
 
 // word censor/chart Topic
 mob/PC/Topic(href,href_list[])
@@ -958,7 +938,7 @@ proc
 mob
 	var
 		list
-			chat_toggle = list("wsay"=1,"msay"=0,"GMSay"=1,"CSay"=1,"CEmote"=1,"say"=1,"whisper"=1,"emote"=1,"wemote"=1)
+			chat_toggle = list("wsay"=1,"GMSay"=1,"CSay"=1,"CEmote"=1,"say"=1,"whisper"=1,"emote"=1,"wemote"=1)
 mob
 	proc
 		return_whisper(t,f,message)

@@ -270,8 +270,6 @@ client
 			F["chat_color"]<<M.chat_color
 			F["ignore_list"]<<M.ignore_list
 			F["chat_toggle"] << M.chat_toggle
-			if(M.chat_toggle.Find("msay")) return 1
-			else M.chat_toggle += "msay"
 		character_load(var/s)
 			if(!s) return
 			var/savefile/F = new("saves/[copytext(ckey,1,2)]/[ckey].sav")
@@ -286,8 +284,6 @@ client
 			if(F["chat_color"]) F["chat_color"]>>new_mob.chat_color
 			if(F["ignore_list"]) F["ignore_list"]>>new_mob.ignore_list
 			if(F["chat_toggle"]) F["chat_toggle"]>>new_mob.chat_toggle
-			if(new_mob.chat_toggle.Find("msay")) return 1
-			else new_mob.chat_toggle += "msay"
 		character_delete(var/s)
 			if(!s) return
 			var/savefile/F = new("saves/[copytext(ckey,1,2)]/[ckey].sav")
