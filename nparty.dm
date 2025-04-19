@@ -8,6 +8,7 @@ mob/PC
 		pstatus
 		pmoves
 		bosspanel = 0
+		tmp_reorder_member
 
 	proc
 		ToggleRow()
@@ -20,9 +21,7 @@ mob/PC
 				src << "<span class='warning'>Only the party leader can change the party's row formation.</span>"
 				return
 
-			var/first_row = party[1].row_position
-			var/new_start = (first_row == 1) ? 2 : 1
-			alternate_rows(new_start)
+			alternate_rows( (party[1].row_position == 1) ? 2 : 1 )
 			info(src, party, "Party row formation has been toggled.")
 			
 		move_party()
@@ -99,7 +98,7 @@ mob/PC
 										if(p!=src) info(null,list(p),"[src] has joined the party.")
 										else info(null,list(p),"You joined with [M] to fight against the evils!")
 									M.update_party()
-									M.alternate_rows(1) // Always alternate after join
+									M.alternate_rows( M.row_position )
 									M.party_gt()
 									return
 								else info(null,list(src),"Cannot join party (full).")
@@ -138,14 +137,126 @@ mob/PC
 				p.pmoves = null
 			if(inmenu == "party_gt") inmenu=null
 
-		alternate_rows(start_with_front = 1)
+		alternate_rows(start_row = 1) // Accepts 1 (front) or 2 (back)
 			for(var/i = 1, i <= party.len, i++)
 				var/mob/PC/p = party[i]
 				if(p)
-					if(start_with_front)
-						p.row_position = (i % 2 == 1) ? 1 : 2 // 1=front, 2=back
-					else
-						p.row_position = (i % 2 == 1) ? 2 : 1
+					if(start_row == 1) // Start with Front
+						p.row_position = (i % 2 == 1) ? 1 : 2 // Odd index = front (1), Even index = back (2)
+					else // Start with Back (start_row == 2)
+						p.row_position = (i % 2 == 1) ? 2 : 1 // Odd index = back (2), Even index = front (1)
+
+		ReorderParty()
+			// --- Checks ---
+			if (!party || party.len <= 1)
+				src << "<span class='warning'>You need more than one member to reorder the party.</span>"
+				return
+			if (src != party[1])
+				src << "<span class='warning'>Only the party leader can reorder members.</span>"
+				return
+			if (inbattle)
+				src << "<span class='warning'>Cannot reorder party during battle.</span>"
+				return
+			// --- End Checks ---
+
+			// --- Select Member to Move ---
+			var/list/movable_members = party.Copy()
+			movable_members.Remove(src) // Leader always stays first
+
+			if (!movable_members.len)
+				src << "<span class='warning'>No other members to reorder.</span>"
+				return
+
+			// Use input() to select the member to potentially move
+			var/mob/PC/member_to_move = input(src, "Select member to move:", "Reorder Party") as null|anything in movable_members
+			if (!member_to_move || !party.Find(member_to_move)) // Check if cancelled or member somehow invalid
+				return
+
+			// --- Initiate Target Position Selection ---
+			tmp_reorder_member = member_to_move // Store the member being moved
+			inmenu = "reorder_target"           // Set the new menu state
+			menupos = party.Find(member_to_move) // Start cursor at current position
+			menu_target_position(null)           // Call proc to create cursor and handle targeting
+			return						
+
+		menu_target_position(direction)
+			if (!tmp_reorder_member) // Safety check if called incorrectly
+				close_allscreen()
+				return
+
+			var/old_position_index = party.Find(tmp_reorder_member)
+
+			if (!direction) // Initial call - set cursor position
+				menupos = old_position_index
+			else // Handle N/S/C/X input
+				switch(direction)
+					if("N") // Move Cursor Up
+						menupos--
+						if (menupos < 2) menupos = party.len // Wrap around (skip leader pos 1)
+					if("S") // Move Cursor Down
+						menupos++
+						if (menupos > party.len) menupos = 2 // Wrap around (skip leader pos 1)
+					if("C") // Confirm Selection (Swap Logic)
+						var/new_position_index = menupos
+
+						if (old_position_index == new_position_index)
+							src << "<span class='notice'>They're already in that position.</span>"
+
+							// No change needed, just reset state and exit
+							tmp_reorder_member = null
+							inmenu = "menu"
+							if(cursor) del(cursor)
+							screen("menu") // Go back to main menu
+							return
+
+						// --- Perform SWAP ---
+						var/mob/PC/member_at_new_pos = party[new_position_index] // Get member at target slot
+						party[new_position_index] = tmp_reorder_member          // Put selected member in target slot
+						party[old_position_index] = member_at_new_pos          // Put target slot member in selected member's old slot
+
+						// --- Update Party State ---
+						update_party() // This handles updating inparty numbers based on new list order
+
+						// Re-apply row alternation based on leader's current preference
+						alternate_rows( party[1].row_position ) // Pass leader's current row (1 or 2)
+
+						// Refresh menu for all party members
+						for (var/mob/PC/p in party)
+							if (p.client && (p.inmenu == "menu" || p.inmenu == "reorder_target") )
+								p.screen("menu") // Redraw the main menu
+
+						info(src, party, "Party order updated.")
+
+						// --- Cleanup ---
+						tmp_reorder_member = null
+						inmenu = "menu" // Go back to main menu state
+						if(cursor) del(cursor)
+						// screen("menu") is called within the loop above
+						return // Exit after confirmation
+
+					if("X") // Cancel
+						tmp_reorder_member = null
+						inmenu = "menu"
+						if(cursor) del(cursor)
+						screen("menu") // Go back to main menu
+						return
+
+			// --- Update Cursor Position ---
+			if(!cursor) cursor = new(client)
+
+			// Map menupos (party index 2-5) to screen Y coordinate for cursor
+			var/cursor_y
+			switch(menupos)
+				// Position 1 is leader, not selectable here
+				if(2) cursor_y = 11 // Y-coord for 2nd member on menu
+				if(3) cursor_y = 8  // Y-coord for 3rd member on menu
+				if(4) cursor_y = 5  // Y-coord for 4th member on menu
+				if(5) cursor_y = 3  // Y-coord for 5th member on menu
+				else cursor_y = 11 // Default fallback (shouldn't happen with wrapping)
+
+			// Place cursor to the left of the portrait area (adjust X as needed)
+			cursor.screen_loc = "1,[cursor_y]:8"
+
 
 mob/PC/var/tmp
 	isMoving = 0	//This is used to check if the player is moving. If so, further movement is not allowed until current movement stops and the var is reset.

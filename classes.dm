@@ -38,7 +38,7 @@ mob/PC
         MaxHP=60
         HP=60
         MaxMP=5
-        MP=5
+        MP=10
         str=2
         agi=2
         vit=1
@@ -54,7 +54,7 @@ mob/PC
         MaxHP=70
         HP=70
         MaxMP=5
-        MP=5
+        MP=12
         str=2
         agi=2
         vit=2
@@ -86,7 +86,7 @@ mob/PC
         MaxHP=75
         HP=75
         MaxMP=5
-        MP=5
+        MP=8
         str=3
         agi=2
         vit=2
@@ -118,7 +118,7 @@ mob/PC
         MaxHP=70
         HP=70
         MaxMP=6
-        MP=6
+        MP=11
         str=2
         agi=2
         vit=1
@@ -134,7 +134,7 @@ mob/PC
         MaxHP=60
         HP=60
         MaxMP=5
-        MP=5
+        MP=13
         str=2
         agi=2
         vit=1
@@ -150,7 +150,7 @@ mob/PC
         MaxHP=100
         HP=100
         MaxMP=3
-        MP=3
+        MP=5
         str=4
         agi=2
         vit=3
@@ -182,7 +182,7 @@ mob/PC
         MaxHP=80
         HP=80
         MaxMP=3
-        MP=3
+        MP=5
         str=4
         agi=3
         vit=2
@@ -198,7 +198,7 @@ mob/PC
         MaxHP=70
         HP=70
         MaxMP=5
-        MP=5
+        MP=8
         str=3
         agi=2
         vit=2
@@ -214,7 +214,7 @@ mob/PC
         MaxHP=65
         HP=65
         MaxMP=5
-        MP=5
+        MP=10
         str=2
         agi=2
         vit=2

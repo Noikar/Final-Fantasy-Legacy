@@ -10,7 +10,7 @@ mob/PC
 		for(var/mob/PC/p in world)	if(isGM(p)||isAdmin(p)||isHost(p)||isHeadAdmin(p)||isHeadGM(p)) GMs+=p
 		info(null,list(usr),"Welcome to Final Fantasy Legacy ([game_version]) [usr]!")
 		usr<<"<br><a href=?action=motd>Check Message of the Day</a><br>"
-		if(fexists("aotd.txt")) usr<<file2text("aotd.txt")
+		if(fexists("aotd.txt")) usr<<file2text("motd.txt")
 		info(usr,world,"has joined the world.")
 		var/addr = usr.client.address
 		if(!addr || addr == "127.0.0.1") addr = "localhost"
@@ -109,6 +109,7 @@ mob/PC/proc
 		src<<psound
 		src<<sound(null)
 		src<<sound(sound,repeat=1,wait=0,1)
+
 	default()
 		var/r_face
 		switch(dir)

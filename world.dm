@@ -69,7 +69,7 @@ var/const/mute_time=2000 					// mute time
 var/const/ban_time=4000 					// ban time after user reached max_warning
 var/const/max_warning=3 					// max warning before auto-ban
 var/const/announce_wait_time=200 			// wait time for the announcement
-var/const/game_version = "5.1"				// game version
+var/const/game_version = "5.2"				// game version
 var/global/chat=1							// global var to turn on/off chat
 
 client/preload_rsc = 2						// preload resources
