@@ -179,17 +179,10 @@ mob/PC/proc/StartBattle(var/turf/Location)
 	var/list/Monsters = new()
 	Monsters = CreateEncounter(Location.encounter_group) // Call the new proc
 
-	//compiling monsters list - This section is now handled within DetermineEncounter
-	// if(Monster1) Monsters+=Monster1;if(Monster2) Monsters+=Monster2;if(Monster3) Monsters+=Monster3
-	// if(Monster4) Monsters+=Monster4;if(Monster5) Monsters+=Monster5;if(Monster6) Monsters+=Monster6
-	// if(Monster7) Monsters+=Monster7;if(Monster8) Monsters+=Monster8;if(Monster9) Monsters+=Monster9
-	// if(Monster10) Monsters+=Monster10;if(Monster11) Monsters+=Monster11;if(Monster12) Monsters+=Monster12
-	// if(Monster13) Monsters+=Monster13;if(Monster14) Monsters+=Monster14;if(Monster15) Monsters+=Monster15
-
 	if(!length(Monsters)){for(var/mob/PC/p in party) p.inmenu=null;return} //no monsters? stopping.
 	//sending nifty sounds
-	party<<SOUND_BTLSTART
-	party<<sound(MUSIC_BATTLE,1,0,1,volume=50)
+	party<<sound(SOUND_BTLSTART,volume=SFX_VOL-30)
+	party<<sound(MUSIC_BATTLE,1,0,1,volume=BGM_VOL)
 	//everything done, lets rumble!
 	Battle(BLoc,0,party,Monsters)
 
@@ -511,7 +504,7 @@ proc/EndBattle(list/Losers)
 				p.menupos=null
 				p.BtlFrm("normal")
 				p<<sound(null)
-				p<<sound(p.sound,1,0,1)
+				p<<sound(p.sound,1,0,1,volume=BGM_VOL)
 				p.inbattle=0
 				p.client.eye=p
 				p.gauge=0
@@ -536,7 +529,7 @@ proc/EndBattle(list/Losers)
 
 proc/Victory(list/Winners,exp_reward,gp_reward)
 	Winners<<sound(null)
-	Winners<<sound(MUSIC_VICTORY,1,0,1,volume=50)
+	Winners<<sound(MUSIC_VICTORY,1,0,1,volume=BGM_VOL)
 	for(var/mob/PC/p in Winners)
 		if(p&&p.client)
 			p.inmenu="panel"
@@ -586,7 +579,7 @@ proc/Victory(list/Winners,exp_reward,gp_reward)
 			p.menupos=null
 			p.BtlFrm("normal")
 			p<<sound(null)
-			p<<sound(p.sound,1,0,1)
+			p<<sound(p.sound,1,0,1,volume=BGM_VOL)
 			p.client.eye=p
 			p.inbattle=0
 			p.gauge=0
@@ -614,7 +607,7 @@ proc/GameOver(list/Losers)
 			p.BtlFrm("normal")
 			p.bosspanel=0
 			p<<sound(null)
-			p<<sound(p.sound,1,0,1)
+			p<<sound(p.sound,1,0,1,volume=BGM_VOL)
 			p.client.eye=p
 			p.inbattle=0
 			p.gauge=0

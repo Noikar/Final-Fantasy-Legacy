@@ -1,3 +1,7 @@
+//VOLUME!
+var/const/BGM_VOL = 20					// global music volume adjuster
+var/const/SFX_VOL = 80					// global sound volume adjuster
+
 //MUSIC!
 var/const/MUSIC_CRYSTAL =   'audio/music/The-Prelude.ogg'
 var/const/MUSIC_WORLD =     'audio/music/World.ogg'

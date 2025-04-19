@@ -17,7 +17,7 @@ mob/PC/proc/GotoLoc(location)
 		if(/area/saved_location/water_cave_area) sound = MUSIC_CAVE
 		if(/area/saved_location/toroia_area) sound = MUSIC_WORLD
 		if(/area/saved_location/legacy_area) sound = MUSIC_WORLD
-	usr<<sound(sound,1,0,1,volume=50)
+	usr<<sound(sound,1,0,1,volume=BGM_VOL)
 
 // area vars
 area

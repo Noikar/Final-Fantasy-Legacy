@@ -138,7 +138,7 @@ mob/PC
 		else BLoc.active = 1
 		party<<sound(null)
 		party<<SOUND_BTLSTART
-		party<<sound(Music,1,0,1,volume=50)
+		party<<sound(Music,1,0,1,volume=BGM_VOL)
 		Battle(BLoc,1,party,Bosses)
 
 //### PVP Stuff ###
@@ -155,7 +155,7 @@ mob/PC/proc/StartPVPBattle(mob/PC/p,mob/PC/s)
 	if(!BLoc){for(var/mob/PC/pp in p.party) pp.inmenu=null;for(var/mob/PC/sp in s.party) sp.inmenu=null;return}
 	else BLoc.active = 1
 	p.sound<<sound(null);p.party<<SOUND_BTLSTART;s.party<<SOUND_BTLSTART
-	p.party<<sound(MUSIC_FIENDBATTLE,1,0,1,volume=50);s.party<<sound(MUSIC_FIENDBATTLE,1,0,1,volume=50)
+	p.party<<sound(MUSIC_FIENDBATTLE,1,0,1,volume=BGM_VOL);s.party<<sound(MUSIC_FIENDBATTLE,1,0,1,volume=BGM_VOL)
 	Battle(BLoc,1,p.party,s.party)
 
 //### NPC Quest Stuff ###

@@ -104,7 +104,7 @@ mob
 				//locating to the starting screen
 				usr.loc=locate(/area/intro_screen)
 				//crystal music..
-				usr<<sound(MUSIC_CRYSTAL,1,0,1,volume=50)
+				usr<<sound(MUSIC_CRYSTAL,1,0,1,volume=BGM_VOL)
 				//setting 'inmenu' so the users can press CENTER to make the loading screen popup
 				inmenu="intro_screen"
 			..()

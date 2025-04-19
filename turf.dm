@@ -25,7 +25,7 @@ turf
 			//saving the loc?
 			if(saveloc) for(var/mob/PC/M in p.party){M.last_area = saveloc;if(!M.visited_location.Find(saveloc)) M.visited_location += saveloc}
 			//who says new location says new music, maybe?
-			if(music) for(var/mob/PC/M in p.party){M<<sound(null);M.sound=music;M<<sound(M.sound,repeat=1,wait=0,channel=1,volume=50)}
+			if(music) for(var/mob/PC/M in p.party){M<<sound(null);M.sound=music;M<<sound(M.sound,repeat=1,wait=0,channel=1,volume=BGM_VOL)}
 			p.inmenu = "turf_teleport"
 			p.density = 0
 			for(var/mob/PC/M in p.party){M.pmoves=null;M.loc = locate(dest_x,dest_y,dest_z);M.dir = direction;M.icon_state = "normal"}

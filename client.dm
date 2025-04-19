@@ -12,13 +12,13 @@ client
 		var/mob/PC/M = usr
 		if(!istype(M, /mob/PC)) return
 		if(!M.rowSwapping)
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 
 		switch(menu_type)
 			if("main")
 				if(!M.inbattle && !M.inmenu)
 					M.screen("menu")
-					M << sound(SOUND_CURSOR)
+					M << sound(SOUND_CURSOR,volume=SFX_VOL)
 					M.inmenu = "menu"
 					M.menupos = 1
 
@@ -50,9 +50,9 @@ client
 		var/mob/PC/M=usr
 		if(M.inmenu)
 			if(!M.rowSwapping)
-				M << sound(SOUND_BACK)
+				M << sound(SOUND_BACK,volume=SFX_VOL)
 			else
-				M << sound(SOUND_ROWSWAP)
+				M << sound(SOUND_ROWSWAP,volume=SFX_VOL-40) // this sound is a little loud
 			switch(M.inmenu)
 			//CHARACTER MENU
 				if("character_menu")
@@ -258,7 +258,7 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu)
 			M.screen("menu")
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 		*/
 
 	Southwest(){return}
@@ -676,7 +676,7 @@ client
 					return // Don't play sound if menu type not handled or no cursor move happened
 
 			// Play sound if we successfully handled a menu cursor move above and didn't return early
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 			return // Prevent default mob movement after handling menu input
 		..() // Default mob movement if not in menu
 
@@ -1031,7 +1031,7 @@ client
 					return // Don't play sound if menu type not handled or no cursor move happened
 
 			// Play sound if we successfully handled a menu cursor move above and didn't return early
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 			return // Prevent default mob movement after handling menu input
 		..() // Default mob movement if not in menu
 
@@ -1296,7 +1296,7 @@ client
 				else // Default case for the switch(M.inmenu)
 					return // Don't play sound if menu type not handled or no cursor move happened
 			// Play sound if we successfully handled a menu cursor move above and didn't return early
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 			return // Prevent default mob movement after handling menu input
 		..() // Default mob movement if not in menu
 
@@ -1561,7 +1561,7 @@ client
 				else // Default case for the switch(M.inmenu)
 					return // Don't play sound if menu type not handled or no cursor move happened
 			// Play sound if we successfully handled a menu cursor move above and didn't return early
-			M << sound(SOUND_CURSOR)
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 			return // Prevent default mob movement after handling menu input
 		..() // Default mob movement if not in menu
 	Center() // This handles selection/confirmation
@@ -1600,14 +1600,14 @@ client
 							var/savefile/F = new("saves/[copytext(ckey,1,2)]/[ckey].sav")
 							F.cd = "/bonus/"
 							if(M.menulist[M.menupos] in F["characters"]){M.close_screen("character_create_info");M.close_screen("character_create_bonus");M.close_screen("character_create");M.inmenu=null;M.client.character_new(M.menulist[M.menulist[M.menupos]])}
-							else M<<SOUND_WRONG
+							else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("character_name")
 					switch(M.menupos)
 						if(1 to 71)
 							if(length(M.menuaction)<max_name_character)
 								M.menuaction+=M.menulist[M.menupos]
 								M.namingway_refresh(M.menuaction)
-							else M<<SOUND_WRONG
+							else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 						if(72)
 							if(!M.menuaction) M.menuaction = M.input_box
 							else M.menuaction = copytext(M.menuaction,1,length(M.menuaction))
@@ -1633,8 +1633,8 @@ client
 							M.menuaction = "item"
 							M.menu_target()
 							M.close_screen("item")
-						else M<<SOUND_WRONG
-					else M<<SOUND_WRONG
+						else M<<sound(SOUND_WRONG,volume=SFX_VOL)
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("magic")
 					var/obj/Ability/O = M.menulist[M.menupos]
 					var/turf/T = M.loc
@@ -1644,11 +1644,11 @@ client
 						M.close_screen("magic_cost")
 						M.close_screen("magic")
 						M.close_screen("magic_type")
-					else M<<SOUND_WRONG
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("menu_target") M.menu_target("C")
 				if("magic_type")
 					if(M.action[M.menupos+1]) M.screen("magic",M.menupos+1)
-					else M<<SOUND_WRONG
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("equip")
 					switch(M.menupos)
 						if(1) M.screen("equiplist","rhand")
@@ -1665,7 +1665,7 @@ client
 						for(var/mob/PC/p in M.party) p.GotoLoc(A.type)
 						del(M.cursor)
 						M.close_allscreen()
-					else M<<SOUND_WRONG
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 			//BANK CODE
 				if("bank")
 					switch(M.menupos)
@@ -1800,24 +1800,24 @@ client
 				if("battle_askills")
 					var/obj/Ability/ASkill = M.menulist[M.menupos]
 					if(M.MP>=ASkill.MPCost) M.btl_target(ASkill)
-					else M<<SOUND_WRONG
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("battle_target") M.btl_target(M.btl_action,"C")
 				if("battle_item")
 					var/obj/Item
 					if((M.menuaction + M.menupos - 1)<=length(M.menulist)) Item = M.menulist[M.menuaction + M.menupos - 1]
 					if(Item && istype(Item,/obj/Ability/Basic/Item||istype(Item,/obj/Ability/Basic/Dart)) && (!Item:CanUse || Item:CanUse == 1)) M.btl_target(Item)
-					else{M<<SOUND_WRONG;return}
+					else{M<<sound(SOUND_WRONG,volume=SFX_VOL);return}
 					M.close_screen("battle_item")
 				if("battle_dart")
 					var/obj/Item
 					if((M.menuaction + M.menupos - 1)<=length(M.menulist)) Item = M.menulist[M.menuaction + M.menupos - 1]
 					if(Item && istype(Item,/obj/Ability/Basic/Dart) && (!Item:CanUse || Item:CanUse == 1)) M.btl_target(Item)
-					else{M<<SOUND_WRONG;return}
+					else{M<<sound(SOUND_WRONG,volume=SFX_VOL);return}
 					M.close_screen("battle_dart")
 				if("monster_drop")
 					var/turf/battle/location/BLoc = locate(/turf/battle/location) in view(M)
 					if(length(BLoc.obj_reward)>=M.menupos && (!BLoc.obj_reward[BLoc.obj_reward[M.menupos]] || BLoc.obj_reward[BLoc.obj_reward[M.menupos]] == M)) M.battle_screen("monster_drop_tp",M.menupos)
-					else M<<SOUND_WRONG
+					else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 				if("monster_drop_tp")
 					var/turf/battle/location/BLoc = locate(/turf/battle/location) in view(M)
 					switch(M.menupos)
@@ -1825,13 +1825,13 @@ client
 							if(BLoc.obj_reward[M.menuanswer]&&BLoc.obj_reward[BLoc.obj_reward[M.menuanswer]] == null)
 								BLoc.obj_reward[BLoc.obj_reward[M.menuanswer]] = M
 								for(var/mob/PC/p in M.party) p.battle_screen("monster_drop_list",M.menuanswer)
-							else M<<SOUND_WRONG
+							else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 							M.client.Northwest()
 						if(2)
 							if(BLoc.obj_reward[M.menuanswer]&&BLoc.obj_reward[BLoc.obj_reward[M.menuanswer]] == M)
 								BLoc.obj_reward[BLoc.obj_reward[M.menuanswer]] = null
 								for(var/mob/PC/p in M.party) p.battle_screen("monster_drop_list",M.menuanswer)
-							else M<<SOUND_WRONG
+							else M<<sound(SOUND_WRONG,volume=SFX_VOL)
 							M.client.Northwest()
 			// MINI-GAME CODE
 				// CHOCOBO RACE
