@@ -259,16 +259,17 @@ client
 			var/savefile/F = new("saves/[copytext(ckey,1,2)]/[ckey].sav")
 			var/mob/PC/M = mob
 			F.cd = "/characters/"
-			F["[s]/name"]<<M.name
-			F["[s]/class"]<<M.class
-			F["[s]/type"]<<M.type
-			F["[s]/level"]<<num2text(M.level)
-			F["[s]/exp"]<<num2text(M.exp,15)
-			F["[s]/gold"]<<num2text(M.gold,10)
-			F["[s]/mob"]<<mob
+			F["[s]/name"] << M.name
+			F["[s]/class"] << M.class
+			F["[s]/type"] << M.type
+			F["[s]/level"] << M.level
+			F["[s]/row_position"] << M.row_position
+			F["[s]/exp"] << num2text(M.exp,15)
+			F["[s]/gold"] << num2text(M.gold,10)
+			F["[s]/mob"] << mob
 			F.cd = "/config/"
-			F["chat_color"]<<M.chat_color
-			F["ignore_list"]<<M.ignore_list
+			F["chat_color"] << M.chat_color
+			F["ignore_list"] << M.ignore_list
 			F["chat_toggle"] << M.chat_toggle
 		character_load(var/s)
 			if(!s) return
@@ -276,14 +277,15 @@ client
 			var/mob/PC/old_mob = mob
 			var/mob/PC/new_mob
 			F.cd = "/characters/"
-			F["[s]/mob"]>>new_mob
-			F["[s]/name"]>>new_mob.name
+			F["[s]/mob"] >> new_mob
+			F["[s]/name"] >> new_mob.name
+			F["[s]/row_position"] >> new_mob.row_position
 			mob = new_mob
 			del(old_mob)
 			F.cd = "/config/"
-			if(F["chat_color"]) F["chat_color"]>>new_mob.chat_color
-			if(F["ignore_list"]) F["ignore_list"]>>new_mob.ignore_list
-			if(F["chat_toggle"]) F["chat_toggle"]>>new_mob.chat_toggle
+			if(F["chat_color"]) F["chat_color"] >> new_mob.chat_color
+			if(F["ignore_list"]) F["ignore_list"] >> new_mob.ignore_list
+			if(F["chat_toggle"]) F["chat_toggle"] >> new_mob.chat_toggle
 		character_delete(var/s)
 			if(!s) return
 			var/savefile/F = new("saves/[copytext(ckey,1,2)]/[ckey].sav")
