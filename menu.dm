@@ -48,8 +48,8 @@ mob/PC/proc/screen(screen,ext)
 			if(4){menu_bg = 1;menu_txt = 4}
 			if(5){menu_bg = 1;menu_txt = 0}
 		screen_background(1,13,menu_bg,17,0,0,3,"menu")
-
-		for(var/i = 1, i <= length(party), i++)
+		
+		for(var/i = 1, i <= length(party), i++)		
 			p = party[i]
 			var/px, py, poffset
 			switch(i)
@@ -63,13 +63,13 @@ mob/PC/proc/screen(screen,ext)
 			else // Back row: right side
 				px = 2
 			screen_portrait(px, py, 16, poffset, 5, p.icon, "menu")
-			screen_textl(5,11.5,py+1.5,py+1.5,0,poffset-8,5,,p.class,"menu")
-			screen_textl(5,8.5,py,py,0,poffset-8,5,,p.name,"menu")
-			screen_textl(9,11.5,py,py,0,poffset-8,5,,"Lv.[p.level]","menu")
-			screen_textl(5.5,6.5,py-0.5,py-0.5,0,poffset-8,5,,"HP","menu")
-			screen_textr(6.5,11,py-0.5,py-0.5,0,poffset-8,5,,"[p.HP]/[p.MaxHP]","menu_s[i]")
-			screen_textl(5.5,6.5,py-1,py-1,0,poffset-8,5,,"MP","menu")
-			screen_textr(6.5,11,py-1,py-1,0,poffset-8,5,,"[p.MP]/[p.MaxMP]","menu_s[i]")
+			screen_textl(5,11.5,py+1.5,py+1.5,0,poffset-8,5,,p.class,"menu") // Class (Y=py+1.5)
+			screen_textl(5,8.5,py+1,py+1,0,poffset-8,5,,p.name,"menu")       // Name (Y=py+1)
+			screen_textl(9,11.5,py+1,py+1,0,poffset-8,5,,"Lv.[p.level]","menu") // Level (Y=py+1)
+			screen_textl(5.5,6.5,py+0.5,py+0.5,0,poffset-8,5,,"HP","menu")   // HP Label (Y=py+0.5)
+			screen_textr(6.5,11,py+0.5,py+0.5,0,poffset-8,5,,"[p.HP]/[p.MaxHP]","menu_s[i]") // HP Value (Y=py+0.5)
+			screen_textl(5.5,6.5,py,py,0,poffset-8,5,,"MP","menu")           // MP Label (Y=py)
+			screen_textr(6.5,11,py,py,0,poffset-8,5,,"[p.MP]/[p.MaxMP]","menu_s[i]") // MP Value (Y=py)
 	else if(screen=="menu_srefresh" && ext)
 		for(var/obj/onscreen/text/O in client.screen) if(O.screentag=="menu_s[ext]") del(O)
 		var/mob/PC/p = party[ext]

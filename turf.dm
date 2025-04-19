@@ -2679,7 +2679,7 @@ turf/misc/misc
 		name="turf"
 		text="t"
 		density = 1
-	void{name="turf";text="t";icon='turf/void.dmi';density=1;opacity=1}
+	void{name="turf";text="t";icon='turf/void.dmi';layer=TURF_LAYER+1;density=1;opacity=1}
 	bottle/icon_state="bottle"
 	btm{name="bed";icon_state="bedtop";density=0}
 	blm{name="bed";icon_state="bedtoplayer";layer=MOB_LAYER+1;density=0}
