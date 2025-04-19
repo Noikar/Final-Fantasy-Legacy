@@ -1569,7 +1569,12 @@ client
 		var/mob/PC/M=usr
 		if(!M.inbattle&&!M.inmenu){M.default();return ..()}
 		if(M.inmenu)
-			M << sound(SOUND_CURSOR)
+			if(world.time < M.client.last_menu_move_time + MENU_MOVE_DELAY)
+				return // Ignore rapid press
+			M.client.last_menu_move_time = world.time // Update last press time (using move time tracker)
+
+			// --- Play sound *after* rate limit check ---
+			M << sound(SOUND_CURSOR,volume=SFX_VOL)
 
 			switch(M.inmenu)
 			//INTRO SCREEN
